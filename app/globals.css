@@ -1,28 +1,17 @@
 :root {
-  /* Colors - 2026 World Cup Inspired */
-  --primary: #1a8e3d; /* Field Green */
-  --primary-hover: #147030;
-  --secondary: #00529b; /* Classic Blue */
-  --accent: #e31b23; /* Passion Red */
-  --background: #f4f7f6;
-  --foreground: #1a1a1a;
-  --card-bg: rgba(255, 255, 255, 0.9);
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-  --border-radius: 16px;
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0f172a;
-    --foreground: #f8fafc;
-    --card-bg: rgba(30, 41, 59, 0.9);
-    --glass-bg: rgba(15, 23, 42, 0.7);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
-  }
+  /* Colors - Energetic World Cup Theme */
+  --primary: #00DF5E; /* Neon Green */
+  --primary-hover: #00b34a;
+  --secondary: #0070FF; /* Electric Blue (Matches Logo) */
+  --accent: #FFD700; /* Victory Gold */
+  --background: #0a0e14; /* Deep Sporty Navy */
+  --foreground: #ffffff;
+  --card-bg: #161c24;
+  --glass-bg: rgba(22, 28, 36, 0.8);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  --border-radius: 20px;
+  --transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 * {
@@ -41,7 +30,10 @@ body {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-image: 
+    radial-gradient(circle at 20% 20%, rgba(0, 223, 94, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0, 112, 255, 0.05) 0%, transparent 40%);
+  font-family: var(--font-inter), sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   line-height: 1.6;
@@ -50,18 +42,20 @@ body {
 /* Glassmorphism utility */
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--glass-border);
   box-shadow: var(--shadow);
 }
 
 /* Buttons */
 .btn {
-  padding: 12px 24px;
+  padding: 14px 28px;
   border-radius: var(--border-radius);
   border: none;
-  font-weight: 600;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
   cursor: pointer;
   transition: var(--transition);
   display: inline-flex;
@@ -72,38 +66,40 @@ body {
 }
 
 .btn-primary {
-  background: var(--primary);
-  color: white;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #000;
+  box-shadow: 0 4px 15px rgba(0, 223, 94, 0.4);
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(26, 142, 61, 0.3);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 223, 94, 0.6);
 }
 
 /* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+@keyframes bounceIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  70% { transform: scale(1.05); }
+  100% { transform: scale(1); opacity: 1; }
 }
 
-.animate-fade-in {
-  animation: fadeIn 0.5s ease forwards;
+.animate-pop {
+  animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 /* Responsive Container */
 .container {
   width: 100%;
-  max-width: 800px;
+  max-width: 1000px;
   margin: 0 auto;
-  padding: 0 20px;
+  padding: 0 24px;
 }
 
 /* Typography */
 h1, h2, h3 {
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  font-family: var(--font-outfit), sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.04em;
   margin-bottom: 0.5rem;
 }
 
@@ -111,6 +107,7 @@ h1, h2, h3 {
   background: linear-gradient(135deg, var(--primary), var(--secondary));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
 }
 
 

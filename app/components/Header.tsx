@@ -7,35 +7,24 @@ export default function Header() {
       position: 'sticky',
       top: 0,
       zIndex: 100,
-      padding: '0.75rem 0',
+      padding: '0.5rem 0',
       marginBottom: '2rem'
     }}>
       <div className="container" style={{
         display: 'flex',
-        justifyContent: 'space-between',
+        justifyContent: 'center', // Centraliza o logo agora que não há links
         alignItems: 'center'
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
           <Image 
-            src="/copaquiz_logo_h.png" 
+            src="/copaquiz_logo_verdeNeon_h.png" 
             alt="CopaQuiz Logo" 
-            width={180} 
-            height={50} 
+            width={220} 
+            height={70} 
             priority
-            style={{ objectFit: 'contain' }}
+            style={{ display: 'block' }}
           />
         </Link>
-        <nav>
-          <ul style={{
-            display: 'flex',
-            listStyle: 'none',
-            gap: '20px',
-            fontWeight: 600
-          }}>
-            <li><Link href="/">Home</Link></li>
-            <li><Link href="/sobre">Sobre</Link></li>
-          </ul>
-        </nav>
       </div>
     </header>
   );

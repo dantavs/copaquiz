@@ -6,39 +6,54 @@ export default function Home() {
   return (
     <>
       <Header />
-      <main className="container animate-fade-in">
-        <section style={{ textAlign: 'center', marginBottom: '3rem' }}>
-          <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>
-            Desafie seu conhecimento sobre a <span className="text-gradient">Copa do Mundo</span>
-          </h1>
-          <p style={{ fontSize: '1.1rem', opacity: 0.8, maxWidth: '600px', margin: '0 auto' }}>
-            Prepare-se para 2026 testando o quanto você sabe sobre a história, os craques e as curiosidades do maior torneio de futebol do planeta.
-          </p>
-        </section>
-
-        <section style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-          gap: '2rem',
-          marginBottom: '4rem'
+      <main className="animate-pop" style={{ width: '100%' }}>
+        <div className="container" style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center'
         }}>
-          {quizzes.map((quiz) => (
-            <QuizCard key={quiz.id} quiz={quiz} />
-          ))}
-        </section>
+          <section style={{ textAlign: 'center', marginBottom: '4rem', marginTop: '2rem' }}>
+            <h1 style={{
+              fontSize: 'clamp(2.2rem, 8vw, 3.5rem)',
+              marginBottom: '1.5rem',
+              lineHeight: 1.1
+            }}>
+              VIVA A EMOÇÃO DA <br />
+              <span className="text-gradient">COPA DO MUNDO</span>
+            </h1>
+            <p style={{ fontSize: 'clamp(1rem, 4vw, 1.25rem)', opacity: 0.8, maxWidth: '650px', margin: '0 auto', fontWeight: 500 }}>
+              Você é um verdadeiro craque ou apenas mais um reserva? Teste seus conhecimentos agora!
+            </p>
+          </section>
 
-        {/* Ad Placeholder */}
-        <div className="glass" style={{
-          padding: '1.5rem',
-          textAlign: 'center',
-          borderRadius: 'var(--border-radius)',
-          marginBottom: '2rem',
-          color: 'var(--foreground)',
-          opacity: 0.5,
-          fontSize: '0.8rem',
-          borderStyle: 'dashed'
-        }}>
-          Espaço para Anúncio
+          <section style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '2.5rem',
+            marginBottom: '4rem',
+            width: '100%',
+          }}>
+            {quizzes.map((quiz) => (
+              <QuizCard key={quiz.id} quiz={quiz} />
+            ))}
+          </section>
+
+          {/* Ad Placeholder */}
+          <div className="glass" style={{
+            padding: '1.5rem',
+            textAlign: 'center',
+            borderRadius: 'var(--border-radius)',
+            marginBottom: '2rem',
+            color: 'var(--foreground)',
+            opacity: 0.5,
+            fontSize: '0.8rem',
+            borderStyle: 'dashed',
+            width: '100%',
+            maxWidth: '800px'
+          }}>
+            Espaço para Anúncio
+          </div>
         </div>
       </main>
 
