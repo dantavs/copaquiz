@@ -13,6 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://copaquiz-omega.vercel.app'),
   title: "CopaQuiz 2026 - O maior Quiz da Copa",
   description: "Teste seus conhecimentos sobre a Copa do Mundo e desafie seus amigos!",
   openGraph: {
