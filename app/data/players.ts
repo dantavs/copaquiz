@@ -62,5 +62,4 @@ export const players: Player[] = [
     { "name": "James Rodriguez", "country": "Colombia", "club": "Sao Paulo", "league": "Brasileirao", "position": "CAM", "age": 34, "height_cm": 180 },
 
     { "name": "Angel Di Maria", "country": "Argentina", "club": "Benfica", "league": "Liga Portugal", "position": "RW", "age": 38, "height_cm": 180 }
-];
-]
+];
