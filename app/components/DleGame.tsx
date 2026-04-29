@@ -111,9 +111,19 @@ export default function DleGame() {
       return row;
     }).reverse().join('\n');
 
-    const text = `CopaQuiz Dle ⚽\n${guesses.length}/6\n\n${emojis}\n\nJogue em: copaquiz.com.br`;
-    navigator.clipboard.writeText(text);
-    alert('Resultado copiado para a área de transferência!');
+    const text = `*ADIVINHEI O JOGADOR!* ⚽🏆\n\nConsegui descobrir o craque secreto em *${guesses.length}/6* tentativas!\n\n${emojis}\n\n*Duvido você acertar em menos!* 👀`;
+    const url = window.location.href;
+    const fullText = `${text}\n\nJogue aqui: ${url}`;
+    
+    if (navigator.share) {
+      navigator.share({
+        title: 'CopaQuiz Dle',
+        text: text,
+        url: url,
+      }).catch(err => console.error('Share failed:', err));
+    } else {
+      window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(fullText)}`, '_blank');
+    }
   };
 
   return (
@@ -185,19 +195,36 @@ export default function DleGame() {
       {/* Game Results Overlay */}
       {gameState !== 'playing' && (
         <div className="glass animate-pop" style={{ 
-          padding: '2rem', 
+          padding: '2.5rem', 
           borderRadius: '16px', 
           textAlign: 'center', 
           marginBottom: '2rem',
-          border: `2px solid ${gameState === 'won' ? '#10b981' : '#ef4444'}`
+          border: `2px solid ${gameState === 'won' ? 'var(--primary)' : '#ef4444'}`,
+          boxShadow: gameState === 'won' ? '0 0 30px rgba(16, 185, 129, 0.2)' : 'none'
         }}>
-          <h2 style={{ fontSize: '1.8rem', marginBottom: '1rem' }}>
-            {gameState === 'won' ? '🎉 Você acertou!' : '💀 Game Over'}
+          <h2 style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>
+            {gameState === 'won' ? '🎉 Você acertou!' : '💀 Fim de jogo'}
           </h2>
-          <p style={{ marginBottom: '1.5rem' }}>O jogador era: <strong>{targetPlayer?.name}</strong></p>
-          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-            <button onClick={shareResult} className="btn btn-primary">Compartilhar 🚀</button>
-            <button onClick={() => window.location.reload()} className="btn" style={{ background: 'rgba(255,255,255,0.1)' }}>Jogar Novamente</button>
+          <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>O jogador era: <strong style={{ color: 'var(--primary)', fontSize: '1.4rem' }}>{targetPlayer?.name}</strong></p>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px', margin: '0 auto' }}>
+            <button onClick={shareResult} className="btn btn-primary" style={{ width: '100%' }}>
+              Compartilhar Resultado 🚀
+            </button>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="btn" 
+              style={{ 
+                width: '100%',
+                background: 'rgba(255,255,255,0.1)', 
+                border: '1px solid rgba(255,255,255,0.2)',
+                color: 'white'
+              }}
+            >
+              Jogar Novamente 🔄
+            </button>
+            <Link href="/" className="btn" style={{ background: 'transparent', opacity: 0.6, fontSize: '0.9rem' }}>
+              Voltar para a Home
+            </Link>
           </div>
         </div>
       )}
