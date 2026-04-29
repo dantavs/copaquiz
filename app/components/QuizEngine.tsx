@@ -1,10 +1,11 @@
 'use client';
 
-import { useState } from 'react';
-import { Quiz, QuizOutcome } from '../data/quizzes';
+import { useState, useEffect } from 'react';
+import { Quiz, Question } from '../data/quizzes';
 import Link from 'next/link';
 
 export default function QuizEngine({ quiz }: { quiz: Quiz }) {
+  const [shuffledQuestions, setShuffledQuestions] = useState<Question[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [triviaScore, setTriviaScore] = useState(0);
   const [personalityScores, setPersonalityScores] = useState<Record<string, number>>({});
@@ -12,8 +13,33 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
-  const currentQuestion = quiz.questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex) / quiz.questions.length) * 100;
+  // Função para embaralhar arrays
+  const shuffleArray = <T,>(array: T[]): T[] => {
+    const newArray = [...array];
+    for (let i = newArray.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+    }
+    return newArray;
+  };
+
+  useEffect(() => {
+    // Embaralha as perguntas E as alternativas de cada pergunta
+    const randomized = shuffleArray(quiz.questions).map(q => ({
+      ...q,
+      options: shuffleArray(q.options)
+    }));
+    setShuffledQuestions(randomized);
+    setCurrentQuestionIndex(0);
+    setTriviaScore(0);
+    setPersonalityScores({});
+    setShowResult(false);
+  }, [quiz]);
+
+  if (shuffledQuestions.length === 0) return null;
+
+  const currentQuestion = shuffledQuestions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex) / shuffledQuestions.length) * 100;
 
   const handleOptionClick = (index: number) => {
     if (selectedOption !== null) return;
@@ -34,7 +60,7 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
     }
 
     setTimeout(() => {
-      if (currentQuestionIndex + 1 < quiz.questions.length) {
+      if (currentQuestionIndex + 1 < shuffledQuestions.length) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
         setSelectedOption(null);
         setIsCorrect(null);
@@ -44,7 +70,7 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
     }, quiz.type === 'trivia' ? 1500 : 600); // Mais rápido para personalidade
   };
 
-  const getPersonalityResult = (): QuizOutcome | null => {
+  const getPersonalityResult = () => {
     if (!quiz.outcomes) return null;
     let maxScore = -1;
     let resultId = '';
@@ -62,11 +88,11 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
   const shareResult = () => {
     let text = '';
     if (quiz.type === 'trivia') {
-      const percentage = (triviaScore / quiz.questions.length) * 100;
+      const percentage = (triviaScore / shuffledQuestions.length) * 100;
       let medal = "🥉";
       if (percentage === 100) medal = "🥇";
       else if (percentage >= 70) medal = "🥈";
-      text = `*MITEI NA COPA!* ${medal}⚽\n\nFiz *${triviaScore}/${quiz.questions.length}* pontos no quiz: _${quiz.title}_\n\n*Duvido você acertar mais que eu!* 👀🏆`;
+      text = `*MITEI NA COPA!* ${medal}⚽\n\nFiz *${triviaScore}/${shuffledQuestions.length}* pontos no quiz: _${quiz.title}_\n\n*Duvido você acertar mais que eu!* 👀🏆`;
     } else {
       const result = getPersonalityResult();
       text = `*DESCOBRI QUEM EU SOU NA COPA!* ⚽🏆\n\nMeu resultado foi: *${result?.title}*\n_${result?.description}_\n\nDescubra quem você seria também! 👀`;
@@ -88,7 +114,7 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
 
   if (showResult) {
     if (quiz.type === 'trivia') {
-      const percentage = (triviaScore / quiz.questions.length) * 100;
+      const percentage = (triviaScore / shuffledQuestions.length) * 100;
       let message = "Precisa treinar mais! 😅";
       if (percentage === 100) message = "Você é um craque! Nível Pelé! 👑";
       else if (percentage >= 70) message = "Ótimo desempenho! Titular absoluto! ⚽";
@@ -98,7 +124,7 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
         <div className="glass animate-pop" style={{ padding: '2.5rem', textAlign: 'center', borderRadius: 'var(--border-radius)' }}>
           <h2 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Fim de Jogo!</h2>
           <div style={{ fontSize: '4.5rem', fontWeight: 900, color: 'var(--primary)', marginBottom: '1rem', lineHeight: 1 }}>
-            {triviaScore} / {quiz.questions.length}
+            {triviaScore} / {shuffledQuestions.length}
           </div>
           <p style={{ fontSize: '1.25rem', marginBottom: '2rem', fontWeight: 500 }}>{message}</p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -155,7 +181,7 @@ export default function QuizEngine({ quiz }: { quiz: Quiz }) {
 
       <div className="glass" style={{ padding: '2.5rem', borderRadius: 'var(--border-radius)' }}>
         <p style={{ opacity: 0.5, marginBottom: '0.8rem', fontWeight: 800, textTransform: 'uppercase', fontSize: '0.8rem', letterSpacing: '0.1em' }}>
-          Pergunta {currentQuestionIndex + 1} de {quiz.questions.length}
+          Pergunta {currentQuestionIndex + 1} de {shuffledQuestions.length}
         </p>
         <h2 style={{ marginBottom: '2.5rem', lineHeight: 1.2, fontSize: '1.8rem' }}>{currentQuestion.text}</h2>
 
