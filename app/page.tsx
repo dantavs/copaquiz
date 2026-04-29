@@ -1,4 +1,5 @@
 import Header from './components/Header';
+import Footer from './components/Footer';
 import QuizCard from './components/QuizCard';
 import { quizzes } from './data/quizzes';
 
@@ -57,14 +58,7 @@ export default function Home() {
         </div>
       </main>
 
-      <footer style={{
-        padding: '2rem 0',
-        textAlign: 'center',
-        opacity: 0.6,
-        fontSize: '0.875rem'
-      }}>
-        <p>&copy; 2026 CopaQuiz - Rumo à Copa 2026 ⚽</p>
-      </footer>
+      <Footer />
     </>
   );
 }

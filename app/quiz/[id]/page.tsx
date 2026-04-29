@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import { quizzes } from '../../data/quizzes';
 import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 import QuizEngine from '../../components/QuizEngine';
 import { notFound } from 'next/navigation';
 
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
       description: `Tente acertar todas as perguntas sobre ${quiz.title}! ⚽🏆`,
       images: [
         {
-          url: '/og-img.png',
+          url: '/og-img.jpg',
           width: 1200,
           height: 630,
         },
@@ -71,14 +72,7 @@ export default async function QuizPage({ params }: { params: Promise<{ id: strin
         </div>
       </main>
 
-      <footer style={{
-        padding: '2rem 0',
-        textAlign: 'center',
-        opacity: 0.6,
-        fontSize: '0.875rem'
-      }}>
-        <p>&copy; 2026 CopaQuiz - Rumo à Copa 2026 ⚽</p>
-      </footer>
+      <Footer />
     </>
   );
 }
