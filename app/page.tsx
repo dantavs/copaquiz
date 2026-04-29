@@ -2,6 +2,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import QuizCard from './components/QuizCard';
 import { quizzes } from './data/quizzes';
+import Link from 'next/link';
 
 export default function Home() {
   return (
