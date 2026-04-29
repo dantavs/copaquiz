@@ -18,6 +18,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://www.copaquiz.com.br'),
   title: "CopaQuiz 2026 - O maior Quiz da Copa",
   description: "Teste seus conhecimentos sobre a Copa do Mundo e desafie seus amigos!",
+  openGraph: {
+    title: "CopaQuiz 2026",
+    description: "Desafie seu conhecimento sobre a Copa do Mundo!",
     images: [
       {
         url: "/og-img.jpg",
