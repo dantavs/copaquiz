@@ -21,19 +21,19 @@ export default function Home() {
               fontWeight: 900
             }}>
               Quiz de Futebol: <br />
-              <span className="text-gradient">Adivinhe o Jogador da Copa do Mundo 2026 ⚽</span>
+              <span className="text-gradient">Teste seus conhecimentos sobre Copa do Mundo</span>
             </h1>
-            
+
             <div className="glass" style={{ padding: '2rem', borderRadius: 'var(--border-radius)', textAlign: 'left', lineHeight: 1.6 }}>
               <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', color: 'var(--primary)' }}>Você consegue adivinhar qual é o jogador apenas com algumas dicas?</h2>
               <p style={{ marginBottom: '1rem', opacity: 0.9 }}>
-                O <strong>Copa Quiz</strong> é um jogo de futebol online onde você testa seus conhecimentos sobre os principais craques que podem disputar a Copa do Mundo de 2026.
+                O <strong>Copa Quiz</strong> é um jogo online com perguntas e respostas sobre futebol, onde você pode se desafiar em diferentes modos de jogo.
               </p>
               <p style={{ marginBottom: '1.5rem', opacity: 0.9 }}>
-                A cada tentativa, você recebe pistas como posição, nacionalidade, idade, clube e muito mais. Desafie-se agora e veja quantas tentativas você precisa para acertar!
+                Aqui você encontra quizzes no formato trivia, com perguntas sobre seleções, jogadores e competições, além de quizzes de personalidade, que revelam qual jogador combina mais com você.
               </p>
               <p style={{ fontWeight: 700, color: 'var(--secondary)' }}>
-                👉 Comece o quiz abaixo e descubra se você realmente entende de futebol.
+                Jogue agora e descubra o quanto você realmente sabe sobre futebol!
               </p>
             </div>
           </section>
@@ -52,17 +52,17 @@ export default function Home() {
           </section>
 
           {/* SEO Content Section After Quizzes */}
-          <section className="glass" style={{ 
-            padding: '3rem', 
-            borderRadius: 'var(--border-radius)', 
-            marginTop: '2rem', 
+          <section className="glass" style={{
+            padding: '3rem',
+            borderRadius: 'var(--border-radius)',
+            marginTop: '2rem',
             marginBottom: '4rem',
             lineHeight: 1.8,
             width: '100%',
             maxWidth: '900px'
           }}>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '2.5rem' }}>
-              
+
               <div>
                 <h2 style={{ fontSize: '1.8rem', color: 'var(--primary)', marginBottom: '1rem' }}>⚙️ Como funciona o quiz</h2>
                 <p>O jogo é simples, mas desafiador:</p>
