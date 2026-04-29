@@ -38,6 +38,29 @@ export default function Home() {
             </div>
           </section>
 
+          {/* Featured Dle Game Mode */}
+          <section style={{ marginBottom: '4rem', width: '100%', maxWidth: '800px' }}>
+            <Link href="/dle" className="glass animate-pop" style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              padding: '2rem', 
+              borderRadius: '24px',
+              textDecoration: 'none',
+              color: 'white',
+              border: '2px solid var(--primary)',
+              boxShadow: '0 0 30px rgba(16, 185, 129, 0.2)',
+              gap: '2rem',
+              transition: 'transform 0.3s'
+            }}>
+              <div style={{ fontSize: '4rem' }}>🧩</div>
+              <div>
+                <h3 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: 'var(--primary)' }}>NOVO MODO: Adivinhe o Jogador</h3>
+                <p style={{ opacity: 0.8 }}>Teste sua inteligência no estilo Wordle! Você tem 6 tentativas para descobrir quem é o craque secreto.</p>
+                <div style={{ marginTop: '1rem', fontWeight: 700, color: 'var(--secondary)' }}>Jogar agora →</div>
+              </div>
+            </Link>
+          </section>
+
           <section style={{
             display: 'flex',
             flexWrap: 'wrap',
