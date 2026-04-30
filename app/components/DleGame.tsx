@@ -15,8 +15,8 @@ const CONTINENTS: Record<string, string> = {
 
 // Categorias de Posição
 const POSITION_CATEGORIES: Record<string, 'DEFENSE' | 'ATTACK'> = {
-  "Lateral Direito": "DEFENSE", "Lateral Esquerdo": "DEFENSE", "Volante": "DEFENSE", "Zagueiro": "DEFENSE", "Goleiro": "DEFENSE",
-  "Meio-Campo": "ATTACK", "Meia Ofensivo": "ATTACK", "Ponta Esquerda": "ATTACK", "Ponta Direita": "ATTACK", "Centroavante": "ATTACK", "Atacante": "ATTACK"
+  "Lateral Direito": "DEFENSE", "Lateral Esquerdo": "DEFENSE", "Volante": "DEFENSE", "Zagueiro": "DEFENSE", "Goleiro": "DEFENSE", "Defensor": "DEFENSE",
+  "Meio-Campo": "ATTACK", "Meia Ofensivo": "ATTACK", "Ponta Esquerda": "ATTACK", "Ponta Direita": "ATTACK", "Centroavante": "ATTACK", "Atacante": "ATTACK", "Meio-campista": "ATTACK"
 };
 
 interface GuessFeedback {
