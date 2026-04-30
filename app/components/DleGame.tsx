@@ -188,7 +188,7 @@ export default function DleGame() {
       text = `*COPAQUIZ DLE INFINITO* ⚽🔥\n\nFiz uma sequência de *${currentResult} vitórias seguidas*!\n\n${emojis}\n\n*Consegue bater meu recorde?* 🏆`;
     }
 
-    const url = "https://www.copaquiz.com.br/dle";
+    const url = "https://www.copaquiz.com.br/quem-e";
     const fullText = `${text}\n\nJogue aqui: ${url}`;
     
     if (navigator.share) {

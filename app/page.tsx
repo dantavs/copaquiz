@@ -41,7 +41,7 @@ export default function Home() {
 
           {/* Featured Dle Game Mode */}
           <section style={{ marginBottom: '4rem', width: '100%', maxWidth: '800px' }}>
-            <Link href="/dle" className="glass animate-pop" style={{ 
+            <Link href="/quem-e" className="glass animate-pop" style={{ 
               display: 'flex', 
               alignItems: 'center', 
               padding: '2rem', 
