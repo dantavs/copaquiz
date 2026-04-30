@@ -42,6 +42,7 @@ export default function DleGame() {
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
   const [streak, setStreak] = useState(0);
   const [lastStreak, setLastStreak] = useState(0);
+  const [focusedIndex, setFocusedIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Função para obter o jogador do dia (determinística)
@@ -148,6 +149,7 @@ export default function DleGame() {
     setGuesses(newGuesses);
     setSearchTerm('');
     setShowDropdown(false);
+    setFocusedIndex(-1);
 
     if (player.name === targetPlayer?.name) {
       setGameState('won');
@@ -206,6 +208,46 @@ export default function DleGame() {
     p.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
     !guesses.some(g => g.player.name === p.name)
   );
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!showDropdown || filteredPlayers.length === 0) return;
+
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setFocusedIndex(prev => (prev < filteredPlayers.length - 1 ? prev + 1 : prev));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setFocusedIndex(prev => (prev > 0 ? prev - 1 : 0));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (focusedIndex >= 0 && focusedIndex < filteredPlayers.length) {
+        handleSelectPlayer(filteredPlayers[focusedIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      setShowDropdown(false);
+      setFocusedIndex(-1);
+    }
+  };
+
+  // Scroll into view logic for the dropdown
+  useEffect(() => {
+    if (showDropdown && focusedIndex >= 0 && dropdownRef.current) {
+      const container = dropdownRef.current;
+      const activeElement = container.children[focusedIndex] as HTMLElement;
+      if (activeElement) {
+        const containerTop = container.scrollTop;
+        const containerBottom = containerTop + container.clientHeight;
+        const elementTop = activeElement.offsetTop;
+        const elementBottom = elementTop + activeElement.clientHeight;
+
+        if (elementTop < containerTop) {
+          container.scrollTop = elementTop;
+        } else if (elementBottom > containerBottom) {
+          container.scrollTop = elementBottom - container.clientHeight;
+        }
+      }
+    }
+  }, [focusedIndex, showDropdown]);
 
   return (
     <div className="dle-container" style={{ width: '100%', maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
@@ -267,7 +309,9 @@ export default function DleGame() {
           onChange={(e) => {
             setSearchTerm(e.target.value);
             setShowDropdown(true);
+            setFocusedIndex(-1); // Reset focus on new search
           }}
+          onKeyDown={handleKeyDown}
           onFocus={() => setShowDropdown(true)}
           style={{
             width: '100%',
@@ -293,15 +337,17 @@ export default function DleGame() {
             borderRadius: '12px',
             border: '1px solid rgba(255,255,255,0.2)'
           }}>
-            {filteredPlayers.map(p => (
+            {filteredPlayers.map((p, index) => (
               <div 
                 key={p.name}
                 onClick={() => handleSelectPlayer(p)}
+                onMouseEnter={() => setFocusedIndex(index)}
                 style={{
                   padding: '1rem',
                   cursor: 'pointer',
                   borderBottom: '1px solid rgba(255,255,255,0.05)',
-                  transition: 'background 0.2s'
+                  transition: 'background 0.2s',
+                  background: index === focusedIndex ? 'rgba(16, 185, 129, 0.2)' : 'transparent'
                 }}
                 className="dropdown-item"
               >
