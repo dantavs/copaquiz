@@ -6,11 +6,11 @@ import Link from 'next/link';
 
 // Mapeamento de Continentes para a regra da cor Amarela
 const CONTINENTS: Record<string, string> = {
-  "Brazil": "South America", "Argentina": "South America", "Uruguay": "South America", "Colombia": "South America",
-  "France": "Europe", "England": "Europe", "Spain": "Europe", "Germany": "Europe", "Portugal": "Europe", "Belgium": "Europe", "Italy": "Europe", "Norway": "Europe",
-  "Canada": "North America", "USA": "North America", "Mexico": "North America",
-  "Morocco": "Africa", "Egypt": "Africa", "Nigeria": "Africa",
-  "South Korea": "Asia", "Japan": "Asia"
+  "Brasil": "South America", "Argentina": "South America", "Uruguai": "South America", "Colômbia": "South America",
+  "França": "Europe", "Inglaterra": "Europe", "Espanha": "Europe", "Alemanha": "Europe", "Portugal": "Europe", "Bélgica": "Europe", "Itália": "Europe", "Noruega": "Europe",
+  "Canadá": "North America", "EUA": "North America", "Estados Unidos": "North America", "México": "North America",
+  "Marrocos": "Africa", "Egito": "Africa", "Nigéria": "Africa",
+  "Coreia do Sul": "Asia", "Japão": "Asia"
 };
 
 // Categorias de Posição
@@ -31,26 +31,93 @@ interface GuessFeedback {
   }
 }
 
+type GameMode = 'daily' | 'endless';
+
 export default function DleGame() {
+  const [gameMode, setGameMode] = useState<GameMode>('daily');
   const [targetPlayer, setTargetPlayer] = useState<Player | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
   const [guesses, setGuesses] = useState<GuessFeedback[]>([]);
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
+  const [streak, setStreak] = useState(0);
+  const [lastStreak, setLastStreak] = useState(0);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Inicialização do Jogo
-  useEffect(() => {
-    const saved = localStorage.getItem('copa-dle-state');
-    if (saved) {
-      const parsed = JSON.parse(saved);
-      // Aqui poderíamos restaurar o estado, mas por simplicidade vamos focar no novo jogo por enquanto
+  // Função para obter o jogador do dia (determinística)
+  const getDailyPlayer = () => {
+    const today = new Date();
+    const dateString = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+    let hash = 0;
+    for (let i = 0; i < dateString.length; i++) {
+      hash = (hash << 5) - hash + dateString.charCodeAt(i);
+      hash |= 0;
     }
-    
-    // Sortear jogador do dia (ou da sessão)
-    const randomPlayer = players[Math.floor(Math.random() * players.length)];
-    setTargetPlayer(randomPlayer);
-  }, []);
+    const index = Math.abs(hash) % players.length;
+    return players[index];
+  };
+
+  // Carregar estado inicial
+  useEffect(() => {
+    const dailyKey = `copa-dle-daily-${new Date().toISOString().split('T')[0]}`;
+    const endlessKey = 'copa-dle-endless-v1';
+
+    if (gameMode === 'daily') {
+      const saved = localStorage.getItem(dailyKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setGuesses(parsed.guesses || []);
+        setGameState(parsed.status || 'playing');
+      } else {
+        setGuesses([]);
+        setGameState('playing');
+      }
+      setTargetPlayer(getDailyPlayer());
+    } else {
+      const saved = localStorage.getItem(endlessKey);
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setGuesses(parsed.guesses || []);
+        setGameState(parsed.status || 'playing');
+        setStreak(parsed.streak || 0);
+        setLastStreak(parsed.lastStreak || 0);
+        
+        if (parsed.targetName) {
+          const p = players.find(player => player.name === parsed.targetName);
+          setTargetPlayer(p || players[Math.floor(Math.random() * players.length)]);
+        } else {
+          setTargetPlayer(players[Math.floor(Math.random() * players.length)]);
+        }
+      } else {
+        setGuesses([]);
+        setGameState('playing');
+        setStreak(0);
+        setTargetPlayer(players[Math.floor(Math.random() * players.length)]);
+      }
+    }
+  }, [gameMode]);
+
+  // Salvar estado sempre que mudar
+  useEffect(() => {
+    if (!targetPlayer) return;
+
+    if (gameMode === 'daily') {
+      const dailyKey = `copa-dle-daily-${new Date().toISOString().split('T')[0]}`;
+      localStorage.setItem(dailyKey, JSON.stringify({
+        guesses,
+        status: gameState
+      }));
+    } else {
+      const endlessKey = 'copa-dle-endless-v1';
+      localStorage.setItem(endlessKey, JSON.stringify({
+        guesses,
+        status: gameState,
+        streak,
+        lastStreak,
+        targetName: targetPlayer.name
+      }));
+    }
+  }, [guesses, gameState, streak, gameMode, targetPlayer, lastStreak]);
 
   const getFeedback = (guess: Player): GuessFeedback => {
     if (!targetPlayer) return {} as GuessFeedback;
@@ -84,20 +151,22 @@ export default function DleGame() {
 
     if (player.name === targetPlayer?.name) {
       setGameState('won');
+      if (gameMode === 'endless') {
+        setStreak(s => s + 1);
+      }
     } else if (newGuesses.length >= 6) {
       setGameState('lost');
+      if (gameMode === 'endless') {
+        setLastStreak(streak);
+        setStreak(0);
+      }
     }
   };
 
-  const filteredPlayers = players.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
-    !guesses.some(g => g.player.name === p.name)
-  );
-
-  const getStatusColor = (status: 'correct' | 'near' | 'wrong') => {
-    if (status === 'correct') return '#10b981'; // Verde
-    if (status === 'near') return '#f59e0b';    // Amarelo
-    return 'rgba(255,255,255,0.1)';           // Cinza/Transparente
+  const nextEndless = () => {
+    setGuesses([]);
+    setGameState('playing');
+    setTargetPlayer(players[Math.floor(Math.random() * players.length)]);
   };
 
   const shareResult = () => {
@@ -111,8 +180,15 @@ export default function DleGame() {
       return row;
     }).reverse().join('\n');
 
-    const text = `*ADIVINHEI O JOGADOR!* ⚽🏆\n\nConsegui descobrir o craque secreto em *${guesses.length}/6* tentativas!\n\n${emojis}\n\n*Duvido você acertar em menos!* 👀`;
-    const url = window.location.href;
+    let text = "";
+    if (gameMode === 'daily') {
+      text = `*COPAQUIZ DLE DIÁRIO* ⚽📅\n\nConsegui descobrir o craque do dia em *${guesses.length}/6* tentativas!\n\n${emojis}\n\n*Duvido você acertar!* 👀`;
+    } else {
+      const currentResult = gameState === 'won' ? streak : lastStreak;
+      text = `*COPAQUIZ DLE INFINITO* ⚽🔥\n\nFiz uma sequência de *${currentResult} vitórias seguidas*!\n\n${emojis}\n\n*Consegue bater meu recorde?* 🏆`;
+    }
+
+    const url = "https://www.copaquiz.com.br/dle";
     const fullText = `${text}\n\nJogue aqui: ${url}`;
     
     if (navigator.share) {
@@ -126,13 +202,58 @@ export default function DleGame() {
     }
   };
 
+  const filteredPlayers = players.filter(p => 
+    p.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
+    !guesses.some(g => g.player.name === p.name)
+  );
+
   return (
     <div className="dle-container" style={{ width: '100%', maxWidth: '800px', margin: '0 auto', padding: '1rem' }}>
       
+      {/* Tabs */}
+      <div style={{ display: 'flex', gap: '10px', marginBottom: '2rem', justifyContent: 'center' }}>
+        <button 
+          onClick={() => setGameMode('daily')}
+          style={{
+            padding: '10px 20px',
+            borderRadius: '100px',
+            border: 'none',
+            background: gameMode === 'daily' ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+            color: 'white',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: '0.3s'
+          }}
+        >
+          📅 Desafio Diário
+        </button>
+        <button 
+          onClick={() => setGameMode('endless')}
+          style={{
+            padding: '10px 20px',
+            borderRadius: '100px',
+            border: 'none',
+            background: gameMode === 'endless' ? 'var(--primary)' : 'rgba(255,255,255,0.1)',
+            color: 'white',
+            fontWeight: 700,
+            cursor: 'pointer',
+            transition: '0.3s'
+          }}
+        >
+          🔥 Modo Infinito
+        </button>
+      </div>
+
       {/* Game Header */}
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem' }}>Adivinhe o Jogador</h1>
-        <p style={{ opacity: 0.7 }}>Quem é o craque secreto da Copa 2026?</p>
+        <h1 style={{ fontSize: '2.5rem', fontWeight: 900, marginBottom: '0.5rem' }}>
+          {gameMode === 'daily' ? 'Desafio do Dia' : 'Modo Infinito'}
+        </h1>
+        {gameMode === 'endless' && (
+          <div style={{ fontSize: '1.2rem', color: 'var(--secondary)', fontWeight: 700 }}>
+            🎯 Sequência: {streak} vitórias
+          </div>
+        )}
       </div>
 
       {/* Input Area */}
@@ -205,26 +326,42 @@ export default function DleGame() {
           <h2 style={{ fontSize: '2.2rem', marginBottom: '1rem' }}>
             {gameState === 'won' ? '🎉 Você acertou!' : '💀 Fim de jogo'}
           </h2>
-          <p style={{ marginBottom: '2rem', fontSize: '1.1rem' }}>O jogador era: <strong style={{ color: 'var(--primary)', fontSize: '1.4rem' }}>{targetPlayer?.name}</strong></p>
+          <p style={{ marginBottom: '1rem', fontSize: '1.1rem' }}>O jogador era: <strong style={{ color: 'var(--primary)', fontSize: '1.4rem' }}>{targetPlayer?.name}</strong></p>
+          
+          {gameMode === 'endless' && gameState === 'lost' && (
+            <p style={{ marginBottom: '1rem', fontWeight: 700 }}>Sequência final: {lastStreak} vitórias</p>
+          )}
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', maxWidth: '400px', margin: '0 auto' }}>
             <button onClick={shareResult} className="btn btn-primary" style={{ width: '100%' }}>
               Compartilhar Resultado 🚀
             </button>
-            <button 
-              onClick={() => window.location.reload()} 
-              className="btn" 
-              style={{ 
-                width: '100%',
-                background: 'rgba(255,255,255,0.1)', 
-                border: '1px solid rgba(255,255,255,0.2)',
-                color: 'white'
-              }}
-            >
-              Jogar Novamente 🔄
-            </button>
-            <Link href="/" className="btn" style={{ background: 'transparent', opacity: 0.6, fontSize: '0.9rem' }}>
-              Voltar para a Home
-            </Link>
+            
+            {gameMode === 'endless' ? (
+              <button 
+                onClick={nextEndless} 
+                className="btn" 
+                style={{ 
+                  width: '100%',
+                  background: 'rgba(255,255,255,0.1)', 
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  color: 'white'
+                }}
+              >
+                {gameState === 'won' ? 'Próximo Jogador ⏩' : 'Tentar Novamente 🔄'}
+              </button>
+            ) : (
+              <div style={{ padding: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px' }}>
+                <p style={{ fontSize: '0.9rem', opacity: 0.8, marginBottom: '10px' }}>O desafio diário acabou! Quer continuar jogando?</p>
+                <button 
+                  onClick={() => setGameMode('endless')}
+                  className="btn"
+                  style={{ width: '100%', background: 'var(--secondary)', color: 'black' }}
+                >
+                  Ir para o Modo Infinito 🔥
+                </button>
+              </div>
+            )}
           </div>
         </div>
       )}
