@@ -71,6 +71,12 @@ export const players: Player[] = [
     { "name": "Takefusa Kubo", "country": "Japão", "club": "Real Sociedad", "league": "La Liga", "position": "Atacante", "age": 25, "height_cm": 173 },
 
     { "name": "Victor Osimhen", "country": "Nigéria", "club": "Napoli", "league": "Serie A", "position": "Atacante", "age": 27, "height_cm": 185 },
-    { "name": "Mohamed Salah", "country": "Egito", "club": "Liverpool", "league": "Premier League", "position": "Atacante", "age": 34, "height_cm": 175 }
-];
+    { "name": "Mohamed Salah", "country": "Egito", "club": "Liverpool", "league": "Premier League", "position": "Atacante", "age": 34, "height_cm": 175 },
 
+    { "name": "Ederson", "country": "Brasil", "club": "Manchester City", "league": "Premier League", "position": "Goleiro", "age": 32, "height_cm": 188 },
+    { "name": "Emiliano Martínez", "country": "Argentina", "club": "Aston Villa", "league": "Premier League", "position": "Goleiro", "age": 34, "height_cm": 195 },
+    { "name": "Mike Maignan", "country": "França", "club": "AC Milan", "league": "Serie A", "position": "Goleiro", "age": 31, "height_cm": 191 },
+    { "name": "Marc-André ter Stegen", "country": "Alemanha", "club": "Barcelona", "league": "La Liga", "position": "Goleiro", "age": 34, "height_cm": 187 },
+    { "name": "Unai Simón", "country": "Espanha", "club": "Athletic Bilbao", "league": "La Liga", "position": "Goleiro", "age": 29, "height_cm": 190 }
+]
+    ;
