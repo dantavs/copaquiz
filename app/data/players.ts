@@ -680,6 +680,16 @@ export const players: Player[] = [
         "age": 39,
         "height_cm": 172,
         "difficulty": "dificil"
+    },
+    {
+        "name": "Ousmane Dembélé",
+        "country": "França",
+        "club": "PSG",
+        "league": "Ligue 1",
+        "position": "Atacante",
+        "age": 29,
+        "height_cm": 178,
+        "difficulty": "facil"
     }
 
 ]
