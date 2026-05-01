@@ -156,6 +156,12 @@ export default function DleGame() {
       if (gameMode === 'endless') {
         setStreak(s => s + 1);
       }
+      
+      // Feedback de vitória
+      if (typeof window !== 'undefined') {
+        if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+        launchConfetti();
+      }
     } else if (newGuesses.length >= 6) {
       setGameState('lost');
       if (gameMode === 'endless') {
@@ -163,6 +169,69 @@ export default function DleGame() {
         setStreak(0);
       }
     }
+  };
+
+  // Função simples de confete (Canvas)
+  const launchConfetti = () => {
+    const canvas = document.createElement('canvas');
+    canvas.style.position = 'fixed';
+    canvas.style.top = '0';
+    canvas.style.left = '0';
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.pointerEvents = 'none';
+    canvas.style.zIndex = '9999';
+    document.body.appendChild(canvas);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles: any[] = [];
+    const colors = ['#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ffffff'];
+
+    for (let i = 0; i < 150; i++) {
+      particles.push({
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+        size: Math.random() * 8 + 4,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        angle: Math.random() * Math.PI * 2,
+        velocity: Math.random() * 15 + 5,
+        friction: 0.96,
+        gravity: 0.2,
+        opacity: 1
+      });
+    }
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      let alive = false;
+
+      particles.forEach(p => {
+        p.velocity *= p.friction;
+        p.x += Math.cos(p.angle) * p.velocity;
+        p.y += Math.sin(p.angle) * p.velocity + p.gravity;
+        p.opacity -= 0.005;
+
+        if (p.opacity > 0) {
+          alive = true;
+          ctx.globalAlpha = p.opacity;
+          ctx.fillStyle = p.color;
+          ctx.fillRect(p.x, p.y, p.size, p.size);
+        }
+      });
+
+      if (alive) {
+        requestAnimationFrame(animate);
+      } else {
+        document.body.removeChild(canvas);
+      }
+    };
+
+    animate();
   };
 
   const nextEndless = () => {
@@ -380,6 +449,26 @@ export default function DleGame() {
         Tentativa: {guesses.length} / 6
       </div>
 
+      {/* Win Overlay Text */}
+      {gameState === 'won' && (
+        <div className="animate-pop" style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          zIndex: 1000,
+          fontSize: 'clamp(3rem, 10vw, 5rem)',
+          fontWeight: 900,
+          color: 'var(--primary)',
+          textShadow: '0 0 30px rgba(16, 185, 129, 0.8), 0 0 60px rgba(16, 185, 129, 0.4)',
+          pointerEvents: 'none',
+          whiteSpace: 'nowrap',
+          textAlign: 'center'
+        }}>
+          ACERTOU! 🎯
+        </div>
+      )}
+
       {/* Game Results Overlay */}
       {gameState !== 'playing' && (
         <div className="glass animate-pop" style={{ 
@@ -435,37 +524,57 @@ export default function DleGame() {
 
       {/* Guesses Cards */}
       <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        {guesses.map((g, i) => (
-          <div key={i} className="glass animate-pop" style={{ 
-            padding: '1rem', 
-            borderRadius: '12px',
-            border: '1px solid rgba(255,255,255,0.1)'
-          }}>
-            <div style={{ textAlign: 'center', fontWeight: 900, fontSize: '1.2rem', marginBottom: '0.8rem', color: 'white' }}>
-              {g.player.name}
-            </div>
-            <div style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(3, 1fr)', 
-              gap: '6px' 
+        {guesses.map((g, i) => {
+          const isCorrect = g.player.name === targetPlayer?.name;
+          return (
+            <div key={i} className="glass animate-pop" style={{ 
+              padding: '1rem', 
+              borderRadius: '12px',
+              border: isCorrect ? '3px solid var(--primary)' : '1px solid rgba(255,255,255,0.1)',
+              boxShadow: isCorrect ? '0 0 20px rgba(16, 185, 129, 0.4)' : 'none',
+              position: 'relative'
             }}>
-              <FeedbackSquare label={g.player.country} status={g.checks.country} />
-              <FeedbackSquare label={g.player.club} status={g.checks.club} />
-              <FeedbackSquare label={g.player.league} status={g.checks.league} />
-              <FeedbackSquare label={g.player.position} status={g.checks.position} />
-              <FeedbackSquare 
-                label={`${g.player.age}a`} 
-                status={g.checks.age.status} 
-                direction={g.checks.age.direction} 
-              />
-              <FeedbackSquare 
-                label={`${g.player.height_cm}cm`} 
-                status={g.checks.height.status} 
-                direction={g.checks.height.direction} 
-              />
+              {isCorrect && (
+                <div style={{
+                  position: 'absolute',
+                  top: '-10px',
+                  right: '10px',
+                  background: 'var(--primary)',
+                  color: 'black',
+                  padding: '2px 10px',
+                  borderRadius: '4px',
+                  fontSize: '0.7rem',
+                  fontWeight: 900
+                }}>
+                  VENCEDOR
+                </div>
+              )}
+              <div style={{ textAlign: 'center', fontWeight: 900, fontSize: '1.2rem', marginBottom: '0.8rem', color: isCorrect ? 'var(--primary)' : 'white' }}>
+                {g.player.name}
+              </div>
+              <div style={{ 
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(3, 1fr)', 
+                gap: '6px' 
+              }}>
+                <FeedbackSquare label={g.player.country} status={g.checks.country} />
+                <FeedbackSquare label={g.player.club} status={g.checks.club} />
+                <FeedbackSquare label={g.player.league} status={g.checks.league} />
+                <FeedbackSquare label={g.player.position} status={g.checks.position} />
+                <FeedbackSquare 
+                  label={`${g.player.age}a`} 
+                  status={g.checks.age.status} 
+                  direction={g.checks.age.direction} 
+                />
+                <FeedbackSquare 
+                  label={`${g.player.height_cm}cm`} 
+                  status={g.checks.height.status} 
+                  direction={g.checks.height.direction} 
+                />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
     </div>
