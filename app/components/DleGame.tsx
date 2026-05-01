@@ -43,7 +43,6 @@ export default function DleGame() {
   const [streak, setStreak] = useState(0);
   const [lastStreak, setLastStreak] = useState(0);
   const [focusedIndex, setFocusedIndex] = useState(-1);
-  const [showWinText, setShowWinText] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Função para obter o jogador do dia (determinística)
@@ -162,8 +161,6 @@ export default function DleGame() {
       if (typeof window !== 'undefined') {
         if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
         launchConfetti();
-        setShowWinText(true);
-        setTimeout(() => setShowWinText(false), 3000);
       }
     } else if (newGuesses.length >= 6) {
       setGameState('lost');
@@ -451,29 +448,6 @@ export default function DleGame() {
       <div style={{ textAlign: 'center', marginBottom: '1rem', fontWeight: 700, fontSize: '1.2rem', color: 'var(--secondary)' }}>
         Tentativa: {guesses.length} / 6
       </div>
-
-      {/* Win Overlay Text */}
-      {showWinText && (
-        <div style={{
-          position: 'fixed',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          zIndex: 1000,
-          pointerEvents: 'none'
-        }}>
-          <div className="animate-pop" style={{
-            fontSize: 'clamp(3rem, 10vw, 5rem)',
-            fontWeight: 900,
-            color: 'var(--primary)',
-            textShadow: '0 0 30px rgba(16, 185, 129, 0.8), 0 0 60px rgba(16, 185, 129, 0.4)',
-            whiteSpace: 'nowrap',
-            textAlign: 'center'
-          }}>
-            ACERTOU! 🎯
-          </div>
-        </div>
-      )}
 
       {/* Game Results Overlay */}
       {gameState !== 'playing' && (

@@ -612,16 +612,6 @@ export const players: Player[] = [
         "difficulty": "facil"
     },
     {
-        "name": "Erling Haaland",
-        "country": "Noruega",
-        "club": "Manchester City",
-        "league": "Premier League",
-        "position": "Atacante",
-        "age": 25,
-        "height_cm": 194,
-        "difficulty": "facil"
-    },
-    {
         "name": "Takefusa Kubo",
         "country": "Japão",
         "club": "Real Sociedad",
