@@ -299,7 +299,23 @@ export default function DleGame() {
       </div>
 
       {/* Input Area */}
-      <div style={{ position: 'relative', marginBottom: '3rem' }}>
+      <div style={{ position: 'relative', marginBottom: '1rem' }}>
+        {targetPlayer && (
+          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '0.5rem' }}>
+            <span style={{ 
+              fontSize: '0.7rem', 
+              fontWeight: 800, 
+              padding: '4px 10px', 
+              borderRadius: '6px',
+              background: targetPlayer.difficulty === 'facil' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(245, 158, 11, 0.2)',
+              color: targetPlayer.difficulty === 'facil' ? '#10b981' : '#f59e0b',
+              border: `1px solid ${targetPlayer.difficulty === 'facil' ? '#10b981' : '#f59e0b'}`,
+              textTransform: 'uppercase'
+            }}>
+              Nível: {targetPlayer.difficulty}
+            </span>
+          </div>
+        )}
         <input
           type="text"
           className="glass"
