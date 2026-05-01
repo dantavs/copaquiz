@@ -417,19 +417,22 @@ export default function DleGame() {
         </div>
       )}
 
-      {/* Guesses Table */}
-      <div style={{ overflowX: 'auto', width: '100%' }}>
-        <div style={{ minWidth: '100%', width: 'max-content', margin: '0 auto' }}>
-          {guesses.map((g, i) => (
-            <div key={i} className="animate-pop" style={{ 
+      {/* Guesses Cards */}
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        {guesses.map((g, i) => (
+          <div key={i} className="glass animate-pop" style={{ 
+            padding: '1rem', 
+            borderRadius: '12px',
+            border: '1px solid rgba(255,255,255,0.1)'
+          }}>
+            <div style={{ textAlign: 'center', fontWeight: 900, fontSize: '1.2rem', marginBottom: '0.8rem', color: 'white' }}>
+              {g.player.name}
+            </div>
+            <div style={{ 
               display: 'grid', 
-              gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 1fr 1fr', 
-              gap: '4px', 
-              marginBottom: '6px' 
+              gridTemplateColumns: 'repeat(3, 1fr)', 
+              gap: '6px' 
             }}>
-              <div className="glass-card" style={{ padding: '0.5rem 0.2rem', textAlign: 'center', fontWeight: 800, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                {g.player.name}
-              </div>
               <FeedbackSquare label={g.player.country} status={g.checks.country} />
               <FeedbackSquare label={g.player.club} status={g.checks.club} />
               <FeedbackSquare label={g.player.league} status={g.checks.league} />
@@ -445,8 +448,8 @@ export default function DleGame() {
                 direction={g.checks.height.direction} 
               />
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
 
     </div>

@@ -70,13 +70,11 @@ export default function DlePage() {
             {/* Example Section */}
             <h3 style={{ fontSize: '1.6rem', color: 'var(--primary)', marginBottom: '1.5rem', textAlign: 'center' }}>Exemplo de Jogada</h3>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', overflowX: 'auto' }}>
-              <div style={{ minWidth: '600px' }}>
-                <ExampleRow name="Neymar" results={['wrong', 'wrong', 'wrong', 'near', 'wrong-up', 'near']} />
-                <ExampleRow name="Mbappé" results={['wrong', 'wrong', 'wrong', 'correct', 'wrong-up', 'wrong-down']} />
-                <ExampleRow name="Di María" results={['correct', 'wrong', 'wrong', 'correct', 'wrong-down', 'near']} />
-                <ExampleRow name="Messi 🎉" results={['correct', 'correct', 'correct', 'correct', 'correct', 'correct']} isWinner />
-              </div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <ExampleRow name="Neymar" results={['wrong', 'wrong', 'wrong', 'near', 'wrong-up', 'near']} />
+              <ExampleRow name="Mbappé" results={['wrong', 'wrong', 'wrong', 'correct', 'wrong-up', 'wrong-down']} />
+              <ExampleRow name="Di María" results={['correct', 'wrong', 'wrong', 'correct', 'wrong-down', 'near']} />
+              <ExampleRow name="Messi 🎉" results={['correct', 'correct', 'correct', 'correct', 'correct', 'correct']} isWinner />
             </div>
 
           </section>
@@ -92,19 +90,24 @@ function ExampleRow({ name, results, isWinner }: { name: string, results: string
   const labels = ['País', 'Clube', 'Liga', 'Posição', 'Idade', 'Altura'];
   
   return (
-    <div style={{ 
-      display: 'grid', 
-      gridTemplateColumns: 'repeat(7, 1fr)', 
-      gap: '8px', 
-      marginBottom: '8px',
+    <div className="glass animate-pop" style={{ 
+      padding: '1rem', 
+      borderRadius: '12px',
+      border: isWinner ? '2px solid #10b981' : '1px solid rgba(255,255,255,0.1)',
       opacity: isWinner ? 1 : 0.8
     }}>
-      <div className="glass-card" style={{ padding: '0.8rem', textAlign: 'center', fontWeight: 800, fontSize: '0.9rem', borderColor: isWinner ? '#10b981' : undefined }}>
+      <div style={{ textAlign: 'center', fontWeight: 900, fontSize: '1.2rem', marginBottom: '0.8rem', color: isWinner ? '#10b981' : 'white' }}>
         {name}
       </div>
-      {results.map((res, i) => (
-        <ExampleSquare key={i} label={labels[i]} type={res} />
-      ))}
+      <div style={{ 
+        display: 'grid', 
+        gridTemplateColumns: 'repeat(3, 1fr)', 
+        gap: '6px' 
+      }}>
+        {results.map((res, i) => (
+          <ExampleSquare key={i} label={labels[i]} type={res} />
+        ))}
+      </div>
     </div>
   );
 }
