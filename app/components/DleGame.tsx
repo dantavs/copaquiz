@@ -359,6 +359,11 @@ export default function DleGame() {
         )}
       </div>
 
+      {/* Attempts Counter */}
+      <div style={{ textAlign: 'center', marginBottom: '1rem', fontWeight: 700, fontSize: '1.2rem', color: 'var(--secondary)' }}>
+        Tentativa: {guesses.length} / 6
+      </div>
+
       {/* Game Results Overlay */}
       {gameState !== 'playing' && (
         <div className="glass animate-pop" style={{ 
@@ -413,16 +418,16 @@ export default function DleGame() {
       )}
 
       {/* Guesses Table */}
-      <div style={{ overflowX: 'auto' }}>
-        <div style={{ minWidth: '600px' }}>
+      <div style={{ overflowX: 'auto', width: '100%' }}>
+        <div style={{ minWidth: '100%', width: 'max-content', margin: '0 auto' }}>
           {guesses.map((g, i) => (
             <div key={i} className="animate-pop" style={{ 
               display: 'grid', 
-              gridTemplateColumns: 'repeat(7, 1fr)', 
-              gap: '8px', 
-              marginBottom: '8px' 
+              gridTemplateColumns: '1.5fr 1fr 1fr 1fr 1fr 1fr 1fr', 
+              gap: '4px', 
+              marginBottom: '6px' 
             }}>
-              <div className="glass-card" style={{ padding: '0.8rem', textAlign: 'center', fontWeight: 800, fontSize: '0.9rem' }}>
+              <div className="glass-card" style={{ padding: '0.5rem 0.2rem', textAlign: 'center', fontWeight: 800, fontSize: '0.75rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {g.player.name}
               </div>
               <FeedbackSquare label={g.player.country} status={g.checks.country} />
@@ -455,19 +460,19 @@ function FeedbackSquare({ label, status, direction }: { label: string, status: '
     <div style={{
       background: bgColor,
       borderRadius: '8px',
-      padding: '0.8rem 0.4rem',
+      padding: '0.5rem 0.2rem',
       textAlign: 'center',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
-      minHeight: '60px',
+      minHeight: '50px',
       border: '1px solid rgba(255,255,255,0.1)',
       transition: 'all 0.5s ease'
     }}>
-      <span style={{ fontSize: '0.75rem', fontWeight: 700, lineHeight: 1.2 }}>{label}</span>
+      <span style={{ fontSize: '0.65rem', fontWeight: 700, lineHeight: 1.2 }}>{label}</span>
       {direction && (
-        <span style={{ fontSize: '1.2rem', marginTop: '2px' }}>
+        <span style={{ fontSize: '1.1rem', marginTop: '1px', fontWeight: 900 }}>
           {direction === 'up' ? '↑' : '↓'}
         </span>
       )}
