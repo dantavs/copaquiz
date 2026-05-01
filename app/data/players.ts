@@ -620,6 +620,66 @@ export const players: Player[] = [
         "age": 25,
         "height_cm": 194,
         "difficulty": "facil"
+    },
+    {
+        "name": "Takefusa Kubo",
+        "country": "Japão",
+        "club": "Real Sociedad",
+        "league": "La Liga",
+        "position": "Atacante",
+        "age": 25,
+        "height_cm": 173,
+        "difficulty": "dificil"
+    },
+    {
+        "name": "Serge Gnabry",
+        "country": "Alemanha",
+        "club": "Bayern Munich",
+        "league": "Bundesliga",
+        "position": "Atacante",
+        "age": 30,
+        "height_cm": 176,
+        "difficulty": "dificil"
+    },
+    {
+        "name": "Thomas Müller",
+        "country": "Alemanha",
+        "club": "Bayer 04 Leverkusen",
+        "league": "Bundesliga",
+        "position": "Atacante",
+        "age": 37,
+        "height_cm": 186,
+        "difficulty": "dificil"
+    },
+    {
+        "name": "Leroy Sané",
+        "country": "Alemanha",
+        "club": "Borussia Dortmund",
+        "league": "Bundesliga",
+        "position": "Atacante",
+        "age": 29,
+        "height_cm": 183,
+        "difficulty": "dificil"
+    },
+    {
+        "name": "Lamine Yamal",
+        "country": "Espanha",
+        "club": "Barcelona",
+        "league": "La Liga",
+        "position": "Atacante",
+        "age": 19,
+        "height_cm": 178,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Luka Modrić",
+        "country": "Croácia",
+        "club": "Milan",
+        "league": "Serie A",
+        "position": "Meio-campista",
+        "age": 39,
+        "height_cm": 172,
+        "difficulty": "dificil"
     }
 
 ]
