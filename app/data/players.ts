@@ -469,6 +469,158 @@ export const players: Player[] = [
         "age": 40,
         "height_cm": 193,
         "difficulty": "facil"
+    },
+    {
+        "name": "Victor Osimhen",
+        "country": "Nigéria",
+        "club": "Napoli",
+        "league": "Serie A",
+        "position": "Atacante",
+        "age": 27,
+        "height_cm": 185,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Rafa Leão",
+        "country": "Portugal",
+        "club": "AC Milan",
+        "league": "Serie A",
+        "position": "Atacante",
+        "age": 27,
+        "height_cm": 188,
+        "difficulty": "facil"
+    },
+
+    {
+        "name": "Cristian Romero",
+        "country": "Argentina",
+        "club": "Tottenham",
+        "league": "Premier League",
+        "position": "Defensor",
+        "age": 28,
+        "height_cm": 185,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Alexis Mac Allister",
+        "country": "Argentina",
+        "club": "Liverpool",
+        "league": "Premier League",
+        "position": "Meio-campista",
+        "age": 27,
+        "height_cm": 176,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Enzo Fernández",
+        "country": "Argentina",
+        "club": "Chelsea",
+        "league": "Premier League",
+        "position": "Meio-campista",
+        "age": 25,
+        "height_cm": 178,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Endrick",
+        "country": "Brasil",
+        "club": "Lyon",
+        "league": "Ligue 1",
+        "position": "Atacante",
+        "age": 20,
+        "height_cm": 173,
+        "difficulty": "dificil"
+    },
+    {
+        "name": "Neymar",
+        "country": "Brasil",
+        "club": "Santos",
+        "league": "Brasileirão",
+        "position": "Atacante",
+        "age": 34,
+        "height_cm": 175,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Marquinhos",
+        "country": "Brasil",
+        "club": "PSG",
+        "league": "Ligue 1",
+        "position": "Defensor",
+        "age": 32,
+        "height_cm": 183,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Raphinha",
+        "country": "Brasil",
+        "club": "Barcelona",
+        "league": "La Liga",
+        "position": "Atacante",
+        "age": 29,
+        "height_cm": 176,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Gabriel Magalhães",
+        "country": "Brasil",
+        "club": "Arsenal",
+        "league": "Premier League",
+        "position": "Defensor",
+        "age": 29,
+        "height_cm": 190,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Gabriel Martinelli",
+        "country": "Brasil",
+        "club": "Arsenal",
+        "league": "Premier League",
+        "position": "Atacante",
+        "age": 25,
+        "height_cm": 178,
+        "difficulty": "facil"
+    },
+    {
+        "name": "João Pedro",
+        "country": "Brasil",
+        "club": "Chelsea",
+        "league": "Premier League",
+        "position": "Atacante",
+        "age": 24,
+        "height_cm": 182,
+        "difficulty": "dificil"
+    },
+    {
+        "name": "Bruno Guimarães",
+        "country": "Brasil",
+        "club": "Newcastle",
+        "league": "Premier League",
+        "position": "Meio-campista",
+        "age": 28,
+        "height_cm": 182,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Achraf Hakimi",
+        "country": "Marrocos",
+        "club": "PSG",
+        "league": "Ligue 1",
+        "position": "Defensor",
+        "age": 27,
+        "height_cm": 181,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Erling Haaland",
+        "country": "Noruega",
+        "club": "Manchester City",
+        "league": "Premier League",
+        "position": "Atacante",
+        "age": 25,
+        "height_cm": 194,
+        "difficulty": "facil"
     }
+
 ]
     ;
