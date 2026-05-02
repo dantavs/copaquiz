@@ -245,11 +245,13 @@ export default function DleGame() {
       const row = [
         g.checks.country === 'correct' ? '🟩' : (g.checks.country === 'near' ? '🟨' : '⬜'),
         g.checks.club === 'correct' ? '🟩' : '⬜',
+        g.checks.league === 'correct' ? '🟩' : '⬜',
         g.checks.position === 'correct' ? '🟩' : (g.checks.position === 'near' ? '🟨' : '⬜'),
         g.checks.age.status === 'correct' ? '🟩' : (g.checks.age.status === 'near' ? '🟨' : '⬜'),
+        g.checks.height.status === 'correct' ? '🟩' : (g.checks.height.status === 'near' ? '🟨' : '⬜'),
       ].join('');
       return row;
-    }).reverse().join('\n');
+    }).join('\n');
 
     let text = "";
     if (gameMode === 'daily') {
