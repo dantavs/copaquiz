@@ -690,7 +690,66 @@ export const players: Player[] = [
         "age": 29,
         "height_cm": 178,
         "difficulty": "facil"
+    },
+    {
+        "name": "Federico Valverde",
+        "country": "Uruguai",
+        "club": "Real Madrid",
+        "league": "La Liga",
+        "position": "Meio-campista",
+        "age": 27,
+        "height_cm": 182,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Gavi",
+        "country": "Espanha",
+        "club": "Barcelona",
+        "league": "La Liga",
+        "position": "Meio-campista",
+        "age": 22,
+        "height_cm": 173,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Bernardo Silva",
+        "country": "Portugal",
+        "club": "Manchester City",
+        "league": "Premier League",
+        "position": "Meio-campista",
+        "age": 31,
+        "height_cm": 173,
+        "difficulty": "facil"
+    },
+    {
+        "name": "João Cancelo",
+        "country": "Portugal",
+        "club": "Barcelona",
+        "league": "La Liga",
+        "position": "Defensor",
+        "age": 31,
+        "height_cm": 182,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Cole Palmer",
+        "country": "Inglaterra",
+        "club": "Chelsea",
+        "league": "Premier League",
+        "position": "Atacante",
+        "age": 24,
+        "height_cm": 185,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Julián Álvarez",
+        "country": "Argentina",
+        "club": "Manchester City",
+        "league": "Premier League",
+        "position": "Atacante",
+        "age": 26,
+        "height_cm": 170,
+        "difficulty": "facil"
     }
-
 ]
     ;
