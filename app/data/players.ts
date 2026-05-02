@@ -353,8 +353,8 @@ export const players: Player[] = [
     {
         "name": "Alexander-Arnold",
         "country": "Inglaterra",
-        "club": "Liverpool",
-        "league": "Premier League",
+        "club": "Real Madrid",
+        "league": "La Liga",
         "position": "Defensor",
         "age": 27,
         "height_cm": 180,
@@ -418,6 +418,16 @@ export const players: Player[] = [
         "position": "Atacante",
         "age": 28,
         "height_cm": 192,
+        "difficulty": "facil"
+    },
+    {
+        "name": "Lautaro Martínez",
+        "country": "Argentina",
+        "club": "Inter",
+        "league": "Serie A",
+        "position": "Atacante",
+        "age": 28,
+        "height_cm": 174,
         "difficulty": "facil"
     },
     {

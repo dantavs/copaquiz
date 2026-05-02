@@ -273,8 +273,12 @@ export default function DleGame() {
     }
   };
 
+  const normalizeString = (str: string) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  };
+
   const filteredPlayers = players.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase()) && 
+    normalizeString(p.name).includes(normalizeString(searchTerm)) && 
     !guesses.some(g => g.player.name === p.name)
   );
 
