@@ -313,8 +313,8 @@ export const players: Player[] = [
     {
         "name": "Reijnders",
         "country": "Holanda",
-        "club": "AC Milan",
-        "league": "Serie A",
+        "club": "Real Madrid",
+        "league": "La Liga",
         "position": "Meio-campista",
         "age": 27,
         "height_cm": 185,
@@ -742,6 +742,16 @@ export const players: Player[] = [
         "difficulty": "facil"
     },
     {
+        "name": "Declan Rice",
+        "country": "Inglaterra",
+        "club": "Arsenal",
+        "league": "Premier League",
+        "position": "Meio-campista",
+        "age": 27,
+        "height_cm": 188,
+        "difficulty": "facil"
+    },
+    {
         "name": "Julián Álvarez",
         "country": "Argentina",
         "club": "Manchester City",
@@ -750,6 +760,42 @@ export const players: Player[] = [
         "age": 26,
         "height_cm": 170,
         "difficulty": "facil"
-    }
+    },
+    { "name": "Vitinha", "country": "Portugal", "club": "PSG", "league": "Ligue 1", "position": "Meio-campista", "age": 26, "height_cm": 172, "difficulty": "dificil" },
+    { "name": "Luis Díaz", "country": "Colômbia", "club": "Liverpool", "league": "Premier League", "position": "Atacante", "age": 29, "height_cm": 180, "difficulty": "facil" },
+    { "name": "Bukayo Saka", "country": "Inglaterra", "club": "Arsenal", "league": "Premier League", "position": "Atacante", "age": 24, "height_cm": 178, "difficulty": "facil" },
+    { "name": "Robert Lewandowski", "country": "Polônia", "club": "Barcelona", "league": "La Liga", "position": "Atacante", "age": 37, "height_cm": 185, "difficulty": "facil" },
+    { "name": "Bruno Fernandes", "country": "Portugal", "club": "Manchester United", "league": "Premier League", "position": "Meio-campista", "age": 32, "height_cm": 179, "difficulty": "facil" },
+    { "name": "Arda Güler", "country": "Turquia", "club": "Real Madrid", "league": "La Liga", "position": "Meio-campista", "age": 21, "height_cm": 176, "difficulty": "dificil" },
+    { "name": "Nuno Mendes", "country": "Portugal", "club": "PSG", "league": "Ligue 1", "position": "Defensor", "age": 24, "height_cm": 176, "difficulty": "dificil" },
+    { "name": "Frenkie de Jong", "country": "Holanda", "club": "Barcelona", "league": "La Liga", "position": "Meio-campista", "age": 28, "height_cm": 181, "difficulty": "facil" },
+    { "name": "Heung-min Son", "country": "Coreia do Sul", "club": "Tottenham", "league": "Premier League", "position": "Atacante", "age": 34, "height_cm": 183, "difficulty": "facil" },
+    { "name": "Sadio Mané", "country": "Senegal", "club": "Al Nassr", "league": "Saudi Pro League", "position": "Atacante", "age": 34, "height_cm": 175, "difficulty": "facil" },
+    { "name": "Christian Pulisic", "country": "Estados Unidos", "club": "AC Milan", "league": "Serie A", "position": "Atacante", "age": 27, "height_cm": 178, "difficulty": "facil" },
+    { "name": "Granit Xhaka", "country": "Suíça", "club": "Bayer Leverkusen", "league": "Bundesliga", "position": "Meio-campista", "age": 33, "height_cm": 185, "difficulty": "facil" },
+    { "name": "Alphonso Davies", "country": "Canadá", "club": "Bayern Munich", "league": "Bundesliga", "position": "Defensor", "age": 25, "height_cm": 183, "difficulty": "facil" },
+    { "name": "Antonio Rüdiger", "country": "Alemanha", "club": "Real Madrid", "league": "La Liga", "position": "Defensor", "age": 33, "height_cm": 190, "difficulty": "facil" },
+    { "name": "Mehdi Taremi", "country": "Irã", "club": "Inter", "league": "Serie A", "position": "Atacante", "age": 33, "height_cm": 185, "difficulty": "dificil" },
+    { "name": "Jérémy Doku", "country": "Bélgica", "club": "Manchester City", "league": "Premier League", "position": "Atacante", "age": 24, "height_cm": 173, "difficulty": "facil" },
+    { "name": "Ryan Gravenberch", "country": "Holanda", "club": "Liverpool", "league": "Premier League", "position": "Meio-campista", "age": 24, "height_cm": 190, "difficulty": "dificil" },
+    { "name": "Willian Pacho", "country": "Equador", "club": "PSG", "league": "Ligue 1", "position": "Defensor", "age": 24, "height_cm": 187, "difficulty": "dificil" },
+    { "name": "Riyad Mahrez", "country": "Argélia", "club": "Al Ahli", "league": "Saudi Pro League", "position": "Atacante", "age": 35, "height_cm": 179, "difficulty": "facil" },
+    { "name": "Emiliano Martínez", "country": "Argentina", "club": "Aston Villa", "league": "Premier League", "position": "Goleiro", "age": 34, "height_cm": 195, "difficulty": "facil" },
+    { "name": "Scott McTominay", "country": "Escócia", "club": "Manchester United", "league": "Premier League", "position": "Meio-campista", "age": 29, "height_cm": 193, "difficulty": "dificil" },
+    { "name": "Phil Foden", "country": "Inglaterra", "club": "Manchester City", "league": "Premier League", "position": "Meio-campista", "age": 26, "height_cm": 171, "difficulty": "facil" },
+    { "name": "Aurélien Tchouaméni", "country": "França", "club": "Real Madrid", "league": "La Liga", "position": "Meio-campista", "age": 26, "height_cm": 187, "difficulty": "facil" },
+    { "name": "Dani Olmo", "country": "Espanha", "club": "RB Leipzig", "league": "Bundesliga", "position": "Meio-campista", "age": 27, "height_cm": 179, "difficulty": "dificil" },
+    { "name": "Omar Marmoush", "country": "Egito", "club": "Eintracht Frankfurt", "league": "Bundesliga", "position": "Atacante", "age": 27, "height_cm": 183, "difficulty": "dificil" },
+    { "name": "Antoine Semenyo", "country": "Gana", "club": "Bournemouth", "league": "Premier League", "position": "Atacante", "age": 26, "height_cm": 185, "difficulty": "dificil" },
+    { "name": "Ousmane Diomande", "country": "Costa do Marfim", "club": "Sporting", "league": "Liga Portugal", "position": "Defensor", "age": 22, "height_cm": 190, "difficulty": "dificil" },
+    { "name": "Brahim Díaz", "country": "Marrocos", "club": "Real Madrid", "league": "La Liga", "position": "Meio-campista", "age": 26, "height_cm": 170, "difficulty": "dificil" },
+    { "name": "Abdukodir Khusanov", "country": "Uzbequistão", "club": "Lens", "league": "Ligue 1", "position": "Defensor", "age": 21, "height_cm": 186, "difficulty": "dificil" },
+    { "name": "Nico Jackson", "country": "Senegal", "club": "Chelsea", "league": "Premier League", "position": "Atacante", "age": 24, "height_cm": 187, "difficulty": "dificil" },
+    { "name": "Rodrygo", "country": "Brasil", "club": "Real Madrid", "league": "La Liga", "position": "Atacante", "age": 25, "height_cm": 174, "difficulty": "facil" },
+    { "name": "Hugo Ekitiké", "country": "França", "club": "PSG", "league": "Ligue 1", "position": "Atacante", "age": 24, "height_cm": 190, "difficulty": "dificil" },
+    { "name": "Gilberto Mora", "country": "México", "club": "Tijuana", "league": "Liga MX", "position": "Meio-campista", "age": 22, "height_cm": 175, "difficulty": "dificil" },
+    { "name": "Kaoru Mitoma", "country": "Japão", "club": "Brighton", "league": "Premier League", "position": "Atacante", "age": 28, "height_cm": 178, "difficulty": "facil" },
+    { "name": "Matheus Cunha", "country": "Brasil", "club": "Wolves", "league": "Premier League", "position": "Atacante", "age": 27, "height_cm": 183, "difficulty": "facil" }
+
 ]
     ;
