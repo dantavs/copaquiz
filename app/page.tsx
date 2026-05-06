@@ -134,22 +134,6 @@ export default function Home() {
 
             </div>
           </section>
-
-          {/* Ad Placeholder */}
-          <div className="glass" style={{
-            padding: '1.5rem',
-            textAlign: 'center',
-            borderRadius: 'var(--border-radius)',
-            marginBottom: '2rem',
-            color: 'var(--foreground)',
-            opacity: 0.5,
-            fontSize: '0.8rem',
-            borderStyle: 'dashed',
-            width: '100%',
-            maxWidth: '800px'
-          }}>
-            Espaço para Anúncio
-          </div>
         </div>
       </main>
 
