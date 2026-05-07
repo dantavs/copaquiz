@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const { messages } = await req.json();
 
     const result = streamText({
-      model: google('gemini-1.5-flash'), // Using flash for fast, cheap responses
+      model: google('gemini-2.5-flash'), // Using flash for fast, cheap responses
       system: COPAQUIZ_SYSTEM_PROMPT,
       messages,
       temperature: 0.1, // Low temperature for factual responses
