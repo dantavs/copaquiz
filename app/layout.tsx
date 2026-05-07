@@ -35,6 +35,8 @@ export const metadata: Metadata = {
   }
 };
 
+import Chatbot from './components/Chatbot';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -50,7 +52,10 @@ export default function RootLayout({
           strategy="lazyOnload"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Chatbot />
+      </body>
     </html>
   );
 }
