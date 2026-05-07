@@ -24,6 +24,7 @@ export default function Footer() {
             justifyContent: 'center',
             padding: 0
           }}>
+            <li><Link href="/faq" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>FAQ</Link></li>
             <li><Link href="/privacidade" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Privacidade</Link></li>
             <li><Link href="/termos" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Termos de Uso</Link></li>
             <li><Link href="/contato" style={{ color: 'var(--foreground)', textDecoration: 'none' }}>Contato</Link></li>
