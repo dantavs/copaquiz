@@ -3,10 +3,18 @@
 import { useState, useEffect, useRef } from 'react';
 import { useChat } from 'ai/react';
 import { MessageCircle, X, Send, Trash2 } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import Link from 'next/link';
 
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
+  const [showConfirmClear, setShowConfirmClear] = useState(false);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [sessionCount, setSessionCount] = useState(0);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  const isLocal = typeof window !== 'undefined' && 
+    (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1');
 
   // Initialize useChat with local storage
   const { messages, input, handleInputChange, handleSubmit, setMessages, isLoading } = useChat({
@@ -16,6 +24,22 @@ export default function Chatbot() {
       // Save to local storage when message is complete
       const currentMessages = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
       localStorage.setItem('copaquiz_chat_history', JSON.stringify([...currentMessages, message]));
+
+      // Security Logic: Abuse Detection
+      if (!isLocal) {
+        if (message.content.startsWith('Como assistente do CopaQuiz, meu foco é te ajudar')) {
+          const offCount = parseInt(localStorage.getItem('copaquiz_chat_off_context') || '0') + 1;
+          localStorage.setItem('copaquiz_chat_off_context', offCount.toString());
+          
+          if (offCount >= 5) {
+            const blockedUntil = Date.now() + 3600000; // 1 hour
+            localStorage.setItem('copaquiz_chat_blocked_until', blockedUntil.toString());
+            setIsBlocked(true);
+          }
+        } else {
+          localStorage.removeItem('copaquiz_chat_off_context');
+        }
+      }
     }
   });
 
@@ -30,13 +54,51 @@ export default function Chatbot() {
         console.error('Failed to parse chat history', e);
       }
     }
-  }, [setMessages]);
+
+    // Security check on mount
+    const blockedUntil = localStorage.getItem('copaquiz_chat_blocked_until');
+    if (blockedUntil && !isLocal) {
+      if (Date.now() < parseInt(blockedUntil)) {
+        setIsBlocked(true);
+      } else {
+        localStorage.removeItem('copaquiz_chat_blocked_until');
+        localStorage.removeItem('copaquiz_chat_off_context');
+      }
+    }
+    
+    const count = localStorage.getItem('copaquiz_chat_total_msgs');
+    if (count) setSessionCount(parseInt(count));
+  }, [setMessages, isLocal]);
 
   // Update local storage when user sends a message
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!input.trim()) return;
+    if (!input.trim() || isBlocked) return;
     
+    // Security Logic: Usage Quota (Silent)
+    if (!isLocal) {
+      const newCount = sessionCount + 1;
+      setSessionCount(newCount);
+      localStorage.setItem('copaquiz_chat_total_msgs', newCount.toString());
+
+      if (newCount > 30) {
+        const userMsg = { id: Date.now().toString(), role: 'user', content: input };
+        const assistantMsg = { 
+          id: (Date.now() + 1).toString(), 
+          role: 'assistant', 
+          content: 'Espero ter ajudado com suas dúvidas sobre o CopaQuiz! Se precisar de algo mais, estou à disposição para falar sobre o site e futebol.' 
+        };
+        
+        const history = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
+        const newHistory = [...history, userMsg, assistantMsg];
+        localStorage.setItem('copaquiz_chat_history', JSON.stringify(newHistory));
+        
+        setMessages(newHistory);
+        handleInputChange({ target: { value: '' } } as any);
+        return;
+      }
+    }
+
     const userMessage = { id: Date.now().toString(), role: 'user', content: input };
     const currentMessages = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
     localStorage.setItem('copaquiz_chat_history', JSON.stringify([...currentMessages, userMessage]));
@@ -45,10 +107,12 @@ export default function Chatbot() {
   };
 
   const clearChat = () => {
-    if (confirm('Tem certeza que deseja apagar o histórico da conversa?')) {
-      setMessages([]);
-      localStorage.removeItem('copaquiz_chat_history');
-    }
+    setMessages([]);
+    localStorage.removeItem('copaquiz_chat_history');
+    localStorage.removeItem('copaquiz_chat_total_msgs');
+    localStorage.removeItem('copaquiz_chat_off_context');
+    setSessionCount(0);
+    setShowConfirmClear(false);
   };
 
   // Auto-scroll
@@ -121,9 +185,60 @@ export default function Chatbot() {
               <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--primary)', boxShadow: '0 0 8px var(--primary)' }}></div>
               <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>Assistente CopaQuiz</h3>
             </div>
-            <button onClick={clearChat} title="Limpar conversa" style={{ background: 'none', border: 'none', color: 'rgba(255,255,255,0.5)', cursor: 'pointer', display: 'flex' }}>
-              <Trash2 size={16} />
-            </button>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              {showConfirmClear ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', animation: 'fadeIn 0.2s' }}>
+                  <button 
+                    onClick={clearChat} 
+                    style={{ 
+                      background: 'var(--primary)', 
+                      color: '#000', 
+                      border: 'none', 
+                      padding: '2px 8px', 
+                      borderRadius: '4px', 
+                      fontSize: '0.7rem', 
+                      fontWeight: 800, 
+                      cursor: 'pointer' 
+                    }}
+                  >
+                    LIMPAR
+                  </button>
+                  <button 
+                    onClick={() => setShowConfirmClear(false)} 
+                    style={{ 
+                      background: 'rgba(255,255,255,0.1)', 
+                      color: 'white', 
+                      border: 'none', 
+                      padding: '2px 8px', 
+                      borderRadius: '4px', 
+                      fontSize: '0.7rem', 
+                      cursor: 'pointer' 
+                    }}
+                  >
+                    X
+                  </button>
+                </div>
+              ) : (
+                <button 
+                  onClick={() => setShowConfirmClear(true)} 
+                  title="Limpar conversa" 
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: 'rgba(255,255,255,0.5)', 
+                    cursor: 'pointer', 
+                    display: 'flex',
+                    padding: '4px',
+                    borderRadius: '4px',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.05)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'none'}
+                >
+                  <Trash2 size={16} />
+                </button>
+              )}
+            </div>
           </div>
 
           {/* Messages Area */}
@@ -154,9 +269,35 @@ export default function Chatbot() {
                   borderBottomLeftRadius: m.role === 'user' ? '16px' : '4px',
                   fontSize: '0.9rem',
                   lineHeight: 1.5,
-                  whiteSpace: 'pre-wrap'
                 }}>
-                  {m.content}
+                  <div className="chatbot-message-content">
+                    <ReactMarkdown
+                      components={{
+                        a: ({ ...props }) => {
+                          const isInternal = props.href?.startsWith('/');
+                          if (isInternal) {
+                            return (
+                              <Link 
+                                href={props.href!} 
+                                style={{ 
+                                  color: m.role === 'user' ? '#000' : 'var(--primary)', 
+                                  fontWeight: 'bold',
+                                  textDecoration: 'underline'
+                                }}
+                              >
+                                {props.children}
+                              </Link>
+                            );
+                          }
+                          return <a {...props} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }} />;
+                        },
+                        p: ({ ...props }) => <p style={{ margin: '0 0 8px 0' }} {...props} />,
+                        strong: ({ ...props }) => <strong style={{ fontWeight: 800, color: m.role === 'user' ? 'inherit' : 'var(--accent)' }} {...props} />
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
+                  </div>
                 </div>
               ))
             )}
@@ -187,12 +328,13 @@ export default function Chatbot() {
             <input
               value={input}
               onChange={handleInputChange}
-              placeholder="Digite sua dúvida..."
+              disabled={isBlocked}
+              placeholder={isBlocked ? "Chat indisponível no momento" : "Digite sua dúvida..."}
               style={{
                 flex: 1,
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
-                color: 'white',
+                background: isBlocked ? 'rgba(255,0,0,0.05)' : 'rgba(255,255,255,0.05)',
+                border: isBlocked ? '1px solid rgba(255,0,0,0.2)' : '1px solid rgba(255,255,255,0.1)',
+                color: isBlocked ? 'rgba(255,255,255,0.3)' : 'white',
                 padding: '0.6rem 1rem',
                 borderRadius: '24px',
                 outline: 'none',
@@ -201,7 +343,7 @@ export default function Chatbot() {
             />
             <button
               type="submit"
-              disabled={isLoading || !input.trim()}
+              disabled={isLoading || !input.trim() || isBlocked}
               style={{
                 width: '40px',
                 height: '40px',
@@ -223,9 +365,14 @@ export default function Chatbot() {
       )}
       <style dangerouslySetInnerHTML={{__html: `
         @keyframes blink { 0% { opacity: 0.2; } 20% { opacity: 1; } 100% { opacity: 0.2; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateX(10px); } to { opacity: 1; transform: translateX(0); } }
         .typing-dot { animation: blink 1.4s infinite both; font-size: 1.2rem; font-weight: bold; }
         .typing-dot:nth-child(2) { animation-delay: 0.2s; }
         .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        
+        /* Markdown Specific Styles */
+        .chatbot-message-content p:last-child { margin-bottom: 0 !important; }
+        .chatbot-message-content strong { color: var(--accent); }
       `}} />
     </>
   );
