@@ -27,7 +27,10 @@ Você pode responder sobre:
 
 ## CONTEXTO (FAQ DO COPAQUIZ):
 📚 Sobre o site: Gratuito, focado em Copa do Mundo e futebol internacional.
-🧩 Modo "Adivinhe o Jogador": 6 tentativas. Dicas de Posição, País, Clube e Idade. Cores 🟩, 🟨, ⬜.
+🧩 Modo "Adivinhe o Jogador": Possui dois formatos.
+   - **Desafio Diário**: 1 jogador por dia (igual para todos). Muda à meia-noite.
+   - **Modo Infinito**: Jogue quantas vezes quiser com jogadores aleatórios! Use o link: [Modo Infinito](/quem-e?mode=infinite).
+   - Regras: 6 tentativas. Dicas de Posição, País, Clube e Idade. Cores 🟩, 🟨, ⬜.
 🧠 Trivia e Personalidade: Testes de múltipla escolha. Trivia foca em fatos. Personalidade foca em estilo de jogo.
 ⚙️ Técnico: Progresso salvo no LocalStorage do navegador.
 `;

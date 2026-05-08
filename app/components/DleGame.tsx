@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { Player, players } from '../data/players';
 import Link from 'next/link';
 
@@ -33,8 +34,10 @@ interface GuessFeedback {
 
 type GameMode = 'daily' | 'endless';
 
-export default function DleGame() {
-  const [gameMode, setGameMode] = useState<GameMode>('daily');
+function DleGameContent() {
+  const searchParams = useSearchParams();
+  const initialMode = searchParams.get('mode') === 'infinite' ? 'endless' : 'daily';
+  const [gameMode, setGameMode] = useState<GameMode>(initialMode);
   const [targetPlayer, setTargetPlayer] = useState<Player | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [showDropdown, setShowDropdown] = useState(false);
@@ -593,3 +596,13 @@ function FeedbackSquare({ label, status, direction }: { label: string, status: '
     </div>
   );
 }
+
+const DleGame = () => {
+  return (
+    <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center', opacity: 0.5 }}>Carregando jogo...</div>}>
+      <DleGameContent />
+    </Suspense>
+  );
+};
+
+export default DleGame;
