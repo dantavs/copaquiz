@@ -1,9 +1,9 @@
 'use client';
 
-import { useState, useEffect, useRef, Suspense } from 'react';
+import { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Player, players } from '../data/players';
-import Link from 'next/link';
+import { calculateStreakProgress, getTrophyStates } from '../lib/streak-utils';
 
 // Mapeamento de Continentes para a regra da cor Amarela
 const CONTINENTS: Record<string, string> = {
@@ -45,6 +45,7 @@ function DleGameContent() {
   const [gameState, setGameState] = useState<'playing' | 'won' | 'lost'>('playing');
   const [streak, setStreak] = useState(0);
   const [lastStreak, setLastStreak] = useState(0);
+  const [bestStreak, setBestStreak] = useState(0);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -85,6 +86,7 @@ function DleGameContent() {
         setGameState(parsed.status || 'playing');
         setStreak(parsed.streak || 0);
         setLastStreak(parsed.lastStreak || 0);
+        setBestStreak(parsed.bestStreak || parsed.streak || 0);
         
         if (parsed.targetName) {
           const p = players.find(player => player.name === parsed.targetName);
@@ -96,6 +98,7 @@ function DleGameContent() {
         setGuesses([]);
         setGameState('playing');
         setStreak(0);
+        setBestStreak(0);
         setTargetPlayer(players[Math.floor(Math.random() * players.length)]);
       }
     }
@@ -118,10 +121,11 @@ function DleGameContent() {
         status: gameState,
         streak,
         lastStreak,
+        bestStreak,
         targetName: targetPlayer.name
       }));
     }
-  }, [guesses, gameState, streak, gameMode, targetPlayer, lastStreak]);
+  }, [guesses, gameState, streak, gameMode, targetPlayer, lastStreak, bestStreak]);
 
   const getFeedback = (guess: Player): GuessFeedback => {
     if (!targetPlayer) return {} as GuessFeedback;
@@ -157,7 +161,11 @@ function DleGameContent() {
     if (player.name === targetPlayer?.name) {
       setGameState('won');
       if (gameMode === 'endless') {
-        setStreak(s => s + 1);
+        setStreak(prev => {
+          const updated = prev + 1;
+          setBestStreak(best => Math.max(best, updated));
+          return updated;
+        });
       }
       
       // Feedback de vitória
@@ -174,7 +182,7 @@ function DleGameContent() {
     }
   };
 
-  // Função simples de confete (Canvas)
+  // Confete mais leve visualmente
   const launchConfetti = () => {
     const canvas = document.createElement('canvas');
     canvas.style.position = 'fixed';
@@ -187,29 +195,43 @@ function DleGameContent() {
     document.body.appendChild(canvas);
 
     const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const particles: any[] = [];
-    const colors = ['#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ffffff'];
-
-    for (let i = 0; i < 150; i++) {
-      particles.push({
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-        size: Math.random() * 8 + 4,
-        color: colors[Math.floor(Math.random() * colors.length)],
-        angle: Math.random() * Math.PI * 2,
-        velocity: Math.random() * 15 + 5,
-        friction: 0.96,
-        gravity: 0.2,
-        opacity: 1
-      });
+    if (!ctx) {
+      document.body.removeChild(canvas);
+      return;
     }
 
-    const animate = () => {
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    resize();
+    window.addEventListener('resize', resize);
+
+    const colors = ['#10b981', '#f59e0b', '#3b82f6', '#ef4444', '#ffffff'];
+    const particles = Array.from({ length: 90 }).map(() => ({
+      x: canvas.width / 2 + (Math.random() * canvas.width) / 6 - canvas.width / 12,
+      y: canvas.height * 0.15,
+      size: Math.random() * 8 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      angle: Math.random() * Math.PI * 2,
+      velocity: Math.random() * 12 + 4,
+      friction: 0.95,
+      gravity: 0.25,
+      opacity: 1
+    }));
+
+    const duration = 2200;
+    const start = performance.now();
+
+    const cleanup = () => {
+      window.removeEventListener('resize', resize);
+      if (canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
+    };
+
+    const animate = (time: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       let alive = false;
 
@@ -217,24 +239,25 @@ function DleGameContent() {
         p.velocity *= p.friction;
         p.x += Math.cos(p.angle) * p.velocity;
         p.y += Math.sin(p.angle) * p.velocity + p.gravity;
-        p.opacity -= 0.005;
+        p.opacity -= 0.01;
 
-        if (p.opacity > 0) {
+        if (p.opacity > 0.05) {
           alive = true;
           ctx.globalAlpha = p.opacity;
           ctx.fillStyle = p.color;
           ctx.fillRect(p.x, p.y, p.size, p.size);
         }
       });
+      ctx.globalAlpha = 1;
 
-      if (alive) {
+      if ((alive || time - start < duration) && canvas.parentNode) {
         requestAnimationFrame(animate);
       } else {
-        document.body.removeChild(canvas);
+        cleanup();
       }
     };
 
-    animate();
+    requestAnimationFrame(animate);
   };
 
   const nextEndless = () => {
@@ -286,6 +309,14 @@ function DleGameContent() {
     normalizeString(p.name).includes(normalizeString(searchTerm)) && 
     !guesses.some(g => g.player.name === p.name)
   );
+
+  const trophyStates = useMemo(() => (
+    gameMode === 'endless' ? getTrophyStates(bestStreak) : []
+  ), [gameMode, bestStreak]);
+
+  const streakProgress = useMemo(() => (
+    gameMode === 'endless' ? calculateStreakProgress(streak) : null
+  ), [gameMode, streak]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!showDropdown || filteredPlayers.length === 0) return;
@@ -370,8 +401,46 @@ function DleGameContent() {
           {gameMode === 'daily' ? 'Desafio do Dia' : 'Modo Infinito'}
         </h1>
         {gameMode === 'endless' && (
-          <div style={{ fontSize: '1.2rem', color: 'var(--secondary)', fontWeight: 700 }}>
-            🎯 Sequência: {streak} vitórias
+          <div className="streak-hud glass">
+            <div className="streak-hud__stats">
+              <div className="streak-chip" aria-live="polite">
+                🔥 Sequência atual <strong>{streak}</strong>
+              </div>
+              <div className="streak-chip streak-chip--ghost">
+                🏆 Recorde <strong>{Math.max(bestStreak, streak)}</strong>
+              </div>
+            </div>
+
+            {streakProgress && (
+              <div className="streak-progress">
+                <div className="streak-progress__labels">
+                  <span>Rumo ao {streakProgress.nextLabel}</span>
+                  <span>
+                    {streakProgress.remainingWins > 0
+                      ? `${streakProgress.remainingWins} vitória(s) para avançar`
+                      : 'Você virou lenda!'}
+                  </span>
+                </div>
+                <div className="streak-progress__bar" role="progressbar" aria-valuenow={streakProgress.percentage} aria-valuemin={0} aria-valuemax={100}>
+                  <div className="streak-progress__fill" style={{ width: `${streakProgress.percentage}%` }} />
+                </div>
+              </div>
+            )}
+
+            <div className="trophy-row" aria-label="Troféus desbloqueados">
+              {trophyStates.map(tier => (
+                <div
+                  key={tier.id}
+                  className={`trophy-card ${tier.unlocked ? 'trophy-card--unlocked' : ''}`}
+                >
+                  <span className="trophy-card__icon" role="img" aria-label={tier.label}>{tier.emoji}</span>
+                  <div className="trophy-card__texts">
+                    <span className="trophy-card__label">{tier.label}</span>
+                    <span className="trophy-card__threshold">{tier.threshold} vitórias</span>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>

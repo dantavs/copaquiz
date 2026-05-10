@@ -22,13 +22,18 @@ export default function Chatbot() {
     initialMessages: [], // Will be hydrated in useEffect
     onFinish: (message) => {
       // Save to local storage when message is complete
-      const currentMessages = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
-      localStorage.setItem('copaquiz_chat_history', JSON.stringify([...currentMessages, message]));
+      try {
+        const currentMessages = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
+        localStorage.setItem('copaquiz_chat_history', JSON.stringify([...currentMessages, message]));
+      } catch (e) {
+        console.error('Failed to update chat history', e);
+      }
 
       // Security Logic: Abuse Detection
       if (!isLocal) {
         if (message.content.startsWith('Como assistente do CopaQuiz, meu foco é te ajudar')) {
-          const offCount = parseInt(localStorage.getItem('copaquiz_chat_off_context') || '0') + 1;
+          const storedOffCount = parseInt(localStorage.getItem('copaquiz_chat_off_context') || '0');
+          const offCount = isNaN(storedOffCount) ? 1 : storedOffCount + 1;
           localStorage.setItem('copaquiz_chat_off_context', offCount.toString());
           
           if (offCount >= 5) {
@@ -67,7 +72,10 @@ export default function Chatbot() {
     }
     
     const count = localStorage.getItem('copaquiz_chat_total_msgs');
-    if (count) setSessionCount(parseInt(count));
+    if (count) {
+      const parsed = parseInt(count);
+      if (!isNaN(parsed)) setSessionCount(parsed);
+    }
   }, [setMessages, isLocal]);
 
   // Update local storage when user sends a message
@@ -100,8 +108,12 @@ export default function Chatbot() {
     }
 
     const userMessage = { id: Date.now().toString(), role: 'user', content: input };
-    const currentMessages = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
-    localStorage.setItem('copaquiz_chat_history', JSON.stringify([...currentMessages, userMessage]));
+    try {
+      const currentMessages = JSON.parse(localStorage.getItem('copaquiz_chat_history') || '[]');
+      localStorage.setItem('copaquiz_chat_history', JSON.stringify([...currentMessages, userMessage]));
+    } catch (e) {
+      console.error('Failed to update chat history', e);
+    }
     
     handleSubmit(e);
   };

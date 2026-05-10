@@ -42,7 +42,6 @@ next-env.d.ts
 
 # process management
 /agents/
-backlog.md
 CLAUDE.md
 implementation_plan.md
 task.md
