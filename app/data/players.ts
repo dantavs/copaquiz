@@ -311,10 +311,10 @@ export const players: Player[] = [
         "difficulty": "facil"
     },
     {
-        "name": "Reijnders",
+        "name": "Tiijani Reijnders",
         "country": "Holanda",
-        "club": "Real Madrid",
-        "league": "La Liga",
+        "club": "Manchester City",
+        "league": "Premier League",
         "position": "Meio-campista",
         "age": 27,
         "height_cm": 185,
@@ -775,7 +775,7 @@ export const players: Player[] = [
     { "name": "Granit Xhaka", "country": "Suíça", "club": "Bayer Leverkusen", "league": "Bundesliga", "position": "Meio-campista", "age": 33, "height_cm": 185, "difficulty": "facil" },
     { "name": "Alphonso Davies", "country": "Canadá", "club": "Bayern Munich", "league": "Bundesliga", "position": "Defensor", "age": 25, "height_cm": 183, "difficulty": "facil" },
     { "name": "Antonio Rüdiger", "country": "Alemanha", "club": "Real Madrid", "league": "La Liga", "position": "Defensor", "age": 33, "height_cm": 190, "difficulty": "facil" },
-    { "name": "Mehdi Taremi", "country": "Irã", "club": "Inter", "league": "Serie A", "position": "Atacante", "age": 33, "height_cm": 185, "difficulty": "dificil" },
+    { "name": "Mehdi Taremi", "country": "Irã", "club": "Olympiacos", "league": "Super League Greece", "position": "Atacante", "age": 33, "height_cm": 185, "difficulty": "dificil" },
     { "name": "Jérémy Doku", "country": "Bélgica", "club": "Manchester City", "league": "Premier League", "position": "Atacante", "age": 24, "height_cm": 173, "difficulty": "facil" },
     { "name": "Ryan Gravenberch", "country": "Holanda", "club": "Liverpool", "league": "Premier League", "position": "Meio-campista", "age": 24, "height_cm": 190, "difficulty": "dificil" },
     { "name": "Willian Pacho", "country": "Equador", "club": "PSG", "league": "Ligue 1", "position": "Defensor", "age": 24, "height_cm": 187, "difficulty": "dificil" },
