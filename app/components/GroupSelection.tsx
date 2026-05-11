@@ -83,7 +83,7 @@ export const GroupSelection = ({ onNext }: { onNext: () => void }) => {
                     }}
                   >
                     <span style={{ color: 'white', fontWeight: 700, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <span style={{ fontSize: '1.2rem' }}>{team?.flag || '❓'}</span>
+                      <img src={`https://flagcdn.com/${team?.flag}.svg`} width="24" alt={team?.name} style={{ borderRadius: '2px' }} />
                       {team?.name || `Time ${teamId}`}
                     </span>
 

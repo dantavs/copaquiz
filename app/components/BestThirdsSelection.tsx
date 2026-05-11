@@ -54,7 +54,7 @@ export const BestThirdsSelection = ({ onNext }: { onNext: () => void }) => {
               }}
             >
               <div style={{ minWidth: 0, display: 'flex', alignItems: 'center', gap: '0.55rem', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '1.15rem' }}>{team?.flag || '❓'}</span>
+                <img src={`https://flagcdn.com/${team?.flag}.svg`} width="24" alt={team?.name} style={{ borderRadius: '2px' }} />
                 <span style={{ fontWeight: 800 }}>{team?.name || `Time ${teamId}`}</span>
                 <span
                   style={{
