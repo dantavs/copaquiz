@@ -3,90 +3,55 @@
 import React from 'react';
 import { useSimulationStore } from '../lib/simulationStore';
 import { teams } from '../data/worldCupData';
-import bracketMapping from '../data/bracketMapping.json';
-
-type TeamReference = {
-  group?: string;
-  pos?: string;
-  isThird?: boolean;
-  slot?: number;
-  match?: string;
-};
-
-type BracketMatch = {
-  id: string;
-  home: TeamReference;
-  away: TeamReference;
-};
-
-type BracketMapping = {
-  R32?: BracketMatch[];
-  R16?: BracketMatch[];
-  QF?: BracketMatch[];
-  SF?: BracketMatch[];
-  Final?: BracketMatch[];
-};
+import { bracketRounds, FINAL_MATCH_ID, resolveTeamId, type BracketMatch, type TeamReference } from '../lib/bracketConfig';
+import { buildShareText } from '../lib/share-utils';
+import { assignThirdPlacements } from '../lib/thirdPlaceAllocator';
 
 export const Bracket = () => {
   const { simulation, setMatchWinner } = useSimulationStore();
-  const mapping = bracketMapping as BracketMapping;
+  const championId = simulation.bracket[FINAL_MATCH_ID]?.winner;
+  const canShare = Boolean(championId);
+  const [toastMessage, setToastMessage] = React.useState<string | null>(null);
+  const thirdAssignments = React.useMemo(() => assignThirdPlacements(simulation), [simulation]);
 
-  const getResolvedTeamName = (ref: TeamReference) => {
-    const teamId = resolveTeamId(ref);
-    return teamId ? (teams[teamId as keyof typeof teams]?.emoji || teams[teamId as keyof typeof teams]?.name) : 'A definir';
-  };
+  React.useEffect(() => {
+    if (!toastMessage) return;
+    const timeout = window.setTimeout(() => setToastMessage(null), 2400);
+    return () => window.clearTimeout(timeout);
+  }, [toastMessage]);
 
   const handleShare = async () => {
-    const championId = simulation.bracket['M31']?.winner;
-    if (!championId) return;
-
-    let shareText = `🏆 Simulador Copa 2026 - Meus palpites:\n\n`;
-    
-    const rounds: Array<{ title: string; matches: BracketMatch[] }> = [
-        { title: 'Oitavas', matches: mapping.R16 || [] },
-        { title: 'Quartas', matches: mapping.QF || [] },
-        { title: 'Semifinal', matches: mapping.SF || [] },
-        { title: 'Final', matches: mapping.Final || [] },
-    ];
-
-    rounds.forEach(round => {
-        shareText += `--- ${round.title} ---\n`;
-        round.matches.forEach(match => {
-            const winnerId = simulation.bracket[match.id]?.winner;
-            const winnerName = winnerId ? teams[winnerId as keyof typeof teams]?.name : 'A definir';
-            shareText += `${getResolvedTeamName(match.home)} vs ${getResolvedTeamName(match.away)}: Vencedor: ${winnerName}\n`;
-        });
-        shareText += `\n`;
+    const sharePayload = buildShareText(simulation, {
+      url: window.location.href,
+      thirdAssignments,
     });
+    if (!sharePayload) {
+      return;
+    }
 
-    const champion = teams[championId as keyof typeof teams];
-    shareText += `🏆 Campeão: ${champion?.name}! ⚽`;
-
-    if (navigator.share) {
-      try {
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: 'Simulador Copa 2026',
-          text: shareText,
+          text: sharePayload,
           url: window.location.href,
         });
-      } catch (err) {
-        console.error('Error sharing:', err);
+        setToastMessage('Compartilhamento enviado!');
+      } else {
+        await navigator.clipboard.writeText(sharePayload);
+        setToastMessage('Resultado copiado!');
       }
-    } else {
-      await navigator.clipboard.writeText(shareText);
-      alert('Resultado copiado para a área de transferência!');
+    } catch (error) {
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        return;
+      }
+      console.error('Erro ao compartilhar resultado', error);
+      setToastMessage('Não foi possível compartilhar.');
     }
   };
 
-  const resolveTeamId = (ref: TeamReference): string | undefined => {
-    if (ref.match) return simulation.bracket[ref.match]?.winner;
-    if (ref.isThird && typeof ref.slot === 'number') return simulation.topThirds[ref.slot];
-    if (ref.group && ref.pos) return simulation.groupSelections[ref.group]?.[ref.pos];
-    return undefined;
-  };
-
   const renderTeam = (ref: TeamReference, matchId: string) => {
-    const teamId = resolveTeamId(ref);
+    const teamId = resolveTeamId(ref, simulation, thirdAssignments);
     const team = teamId ? teams[teamId as keyof typeof teams] : null;
     const isWinner = simulation.bracket[matchId]?.winner === teamId;
 
@@ -143,36 +108,60 @@ export const Bracket = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <h2 style={{ fontSize: '2rem', textAlign: 'center' }}>Simulador Mata-Mata</h2>
       
-      {renderRound('16 avos de final', mapping.R32)}
-      {renderRound('Oitavas de Final', mapping.R16)}
-      {renderRound('Quartas de Final', mapping.QF)}
-      {renderRound('Semifinais', mapping.SF)}
-      {renderRound('Final', mapping.Final)}
+      {bracketRounds.map((round) => (
+        <React.Fragment key={round.title}>{renderRound(round.title, round.matches)}</React.Fragment>
+      ))}
 
-       {simulation.bracket['M31']?.winner && (
-         <div className="glass" style={{ marginTop: '0.5rem', padding: '1.25rem', borderRadius: '16px', textAlign: 'center' }}>
-           <h3 style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>🏆 Campeão</h3>
-           <div style={{ fontSize: '1.8rem', fontWeight: 900, marginTop: '0.5rem', marginBottom: '1.5rem' }}>
-             <img src={`https://flagcdn.com/${teams[simulation.bracket['M31'].winner as keyof typeof teams]?.flag}.svg`} width="40" alt="campeão" />
-             {teams[simulation.bracket['M31'].winner as keyof typeof teams]?.name}
-           </div>
-           <button
-             onClick={handleShare}
-             className="btn"
-             style={{
-               background: 'linear-gradient(135deg, var(--primary), var(--secondary))',
-               color: 'white',
-               padding: '0.8rem 1.5rem',
-               borderRadius: '999px',
-               fontWeight: 700,
-               cursor: 'pointer',
-               border: 'none'
-             }}
-           >
-             Compartilhar Resultado
-           </button>
-         </div>
-       )}
+      <div className="glass" style={{ marginTop: '0.5rem', padding: '1.25rem', borderRadius: '16px', textAlign: 'center' }}>
+        <h3 style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>🏆 Campeão</h3>
+        {championId ? (
+          <div style={{ fontSize: '1.8rem', fontWeight: 900, marginTop: '0.5rem', marginBottom: '1.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <img src={`https://flagcdn.com/${teams[championId as keyof typeof teams]?.flag}.svg`} width="40" alt="campeão" />
+            {teams[championId as keyof typeof teams]?.name}
+          </div>
+        ) : (
+          <p style={{ opacity: 0.75, marginTop: '0.75rem' }}>Defina o vencedor da Final para liberar o compartilhamento.</p>
+        )}
+
+        <button
+          onClick={handleShare}
+          className="btn"
+          disabled={!canShare}
+          style={{
+            background: '#FFD700',
+            color: '#001F3F',
+            padding: '0.85rem 1.75rem',
+            borderRadius: '999px',
+            fontWeight: 800,
+            cursor: canShare ? 'pointer' : 'not-allowed',
+            border: 'none',
+            opacity: canShare ? 1 : 0.5,
+            transition: 'transform 0.2s ease'
+          }}
+        >
+          Compartilhar Resultado 📲
+        </button>
+      </div>
+
+      {toastMessage && (
+        <div
+          style={{
+            position: 'fixed',
+            bottom: '1.5rem',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            background: 'rgba(0, 0, 0, 0.85)',
+            color: '#fff',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '999px',
+            boxShadow: '0 12px 32px rgba(0,0,0,0.4)',
+            zIndex: 50,
+            fontWeight: 600
+          }}
+        >
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 };
