@@ -18,7 +18,7 @@ const tabs: Array<{ id: Step; label: string }> = [
 
 export default function SimulatorPage() {
   const [currentStep, setCurrentStep] = useState<Step>('groups');
-  const { simulation, groups } = useSimulationStore();
+  const { simulation, groups, resetSimulation } = useSimulationStore();
   const sectionRef = React.useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -50,6 +50,29 @@ export default function SimulatorPage() {
             <h1 style={{ textAlign: 'center', fontSize: 'clamp(1.8rem, 5vw, 2.6rem)', marginBottom: '1rem' }}>
               Simulador <span className="text-gradient">Copa 2026</span>
             </h1>
+
+            <div style={{ textAlign: 'center', marginBottom: '1rem' }}>
+              <button
+                onClick={() => {
+                  if (confirm('Tem certeza que deseja zerar todas as respostas?')) {
+                    resetSimulation();
+                    setCurrentStep('groups');
+                  }
+                }}
+                className="btn"
+                style={{
+                  background: 'transparent',
+                  color: 'var(--primary)',
+                  padding: '0.4rem 0.8rem',
+                  borderRadius: '8px',
+                  cursor: 'pointer',
+                  border: '1px solid var(--primary)',
+                  fontSize: '0.9rem'
+                }}
+              >
+                Zerar Simulador
+              </button>
+            </div>
 
             <div
               className="glass"
