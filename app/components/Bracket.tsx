@@ -143,11 +143,11 @@ export const Bracket = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <h2 style={{ fontSize: '2rem', textAlign: 'center' }}>Simulador Mata-Mata</h2>
       
-      {renderRound('Round of 32', mapping.R32)}
-      {renderRound('Round of 16', mapping.R16)}
+      {renderRound('Trinta-e-dois Avos de Final', mapping.R32)}
+      {renderRound('Oitavas de Final', mapping.R16)}
       {renderRound('Quartas de Final', mapping.QF)}
       {renderRound('Semifinais', mapping.SF)}
-      {renderRound('Grande Final', mapping.Final)}
+      {renderRound('Final', mapping.Final)}
 
        {simulation.bracket['M31']?.winner && (
          <div className="glass" style={{ marginTop: '0.5rem', padding: '1.25rem', borderRadius: '16px', textAlign: 'center' }}>
