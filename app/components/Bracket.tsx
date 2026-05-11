@@ -1,9 +1,10 @@
 'use client';
 
-import React from 'react';
+import React, { useRef } from 'react';
 import { useSimulationStore } from '../lib/simulationStore';
 import { teams } from '../data/worldCupData';
 import bracketMapping from '../data/bracketMapping.json';
+import html2canvas from 'html2canvas';
 
 type TeamReference = {
   group?: string;
@@ -30,66 +31,35 @@ type BracketMapping = {
 export const Bracket = () => {
   const { simulation, setMatchWinner } = useSimulationStore();
   const mapping = bracketMapping as BracketMapping;
-
-  const getResolvedTeamName = (ref: TeamReference) => {
-    const teamId = resolveTeamId(ref);
-    return teamId ? teams[teamId as keyof typeof teams]?.name : 'A definir';
-  };
+  const bracketRef = useRef<HTMLDivElement>(null);
 
   const handleShare = async () => {
-    const championId = simulation.bracket['M31']?.winner;
-    if (!championId) return;
-
-    let shareText = `🏆 Simulador Copa 2026 - Meus palpites:\n\n`;
+    if (!bracketRef.current) return;
     
-    const rounds: Array<{ title: string; matches: BracketMatch[] }> = [
-        { title: 'Oitavas', matches: mapping.R16 || [] },
-        { title: 'Quartas', matches: mapping.QF || [] },
-        { title: 'Semifinal', matches: mapping.SF || [] },
-        { title: 'Final', matches: mapping.Final || [] },
-    ];
-
-    rounds.forEach(round => {
-        shareText += `--- ${round.title} ---\n`;
-        round.matches.forEach(match => {
-            const winnerId = simulation.bracket[match.id]?.winner;
-            const winnerName = winnerId ? teams[winnerId as keyof typeof teams]?.name : 'A definir';
-            shareText += `${getResolvedTeamName(match.home)} vs ${getResolvedTeamName(match.away)}: Vencedor: ${winnerName}\n`;
-        });
-        shareText += `\n`;
+    // Simplificando o compartilhamento apenas como imagem
+    const canvas = await html2canvas(bracketRef.current, { backgroundColor: '#1a1a1a' });
+    canvas.toBlob(async (blob) => {
+        if (!blob) return;
+        const file = new File([blob], 'meus-palpites.png', { type: 'image/png' });
+        if (navigator.share) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: 'Simulador Copa 2026',
+            });
+          } catch (err) {
+            console.error('Error sharing:', err);
+          }
+        } else {
+            alert('Compartilhamento não suportado.');
+        }
     });
-
-    const champion = teams[championId as keyof typeof teams];
-    shareText += `🏆 Campeão: ${champion?.flag} ${champion?.name}! ⚽`;
-
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: 'Simulador Copa 2026',
-          text: shareText,
-          url: window.location.href,
-        });
-      } catch (err) {
-        console.error('Error sharing:', err);
-      }
-    } else {
-      // Fallback: Copy to clipboard
-      await navigator.clipboard.writeText(shareText);
-      alert('Resultado copiado para a área de transferência!');
-    }
   };
 
   const resolveTeamId = (ref: TeamReference): string | undefined => {
-    if (ref.match) {
-      return simulation.bracket[ref.match]?.winner;
-    }
-    if (ref.isThird && typeof ref.slot === 'number') {
-      return simulation.topThirds[ref.slot];
-    }
-    if (ref.group && ref.pos) {
-      return simulation.groupSelections[ref.group]?.[ref.pos];
-    }
-
+    if (ref.match) return simulation.bracket[ref.match]?.winner;
+    if (ref.isThird && typeof ref.slot === 'number') return simulation.topThirds[ref.slot];
+    if (ref.group && ref.pos) return simulation.groupSelections[ref.group]?.[ref.pos];
     return undefined;
   };
 
@@ -117,7 +87,7 @@ export const Bracket = () => {
       >
         {team ? (
             <>
-                <span style={{ fontSize: '1.2rem' }}>{team.flag}</span>
+                <img src={`https://flagcdn.com/${team.flag}.svg`} width="20" alt={team.name} style={{ borderRadius: '2px' }} />
                 {team.name}
             </>
         ) : 'A definir'}
@@ -148,8 +118,8 @@ export const Bracket = () => {
   );
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      <h2 style={{ fontSize: '2rem', textAlign: 'center' }}>Simulador Mata-Mata</h2>
+    <div ref={bracketRef} style={{ display: 'flex', flexDirection: 'column', gap: '2rem', padding: '1rem', background: '#1a1a1a' }}>
+      <h2 style={{ fontSize: '2rem', textAlign: 'center', color: 'white' }}>Simulador Mata-Mata</h2>
       
       {renderRound('Round of 32', mapping.R32)}
       {renderRound('Round of 16', mapping.R16)}
@@ -161,7 +131,7 @@ export const Bracket = () => {
          <div className="glass" style={{ marginTop: '0.5rem', padding: '1.25rem', borderRadius: '16px', textAlign: 'center' }}>
            <h3 style={{ fontSize: '1.5rem', color: 'var(--accent)' }}>🏆 Campeão</h3>
            <div style={{ fontSize: '1.8rem', fontWeight: 900, marginTop: '0.5rem', marginBottom: '1.5rem' }}>
-             {teams[simulation.bracket['M31'].winner as keyof typeof teams]?.flag} {teams[simulation.bracket['M31'].winner as keyof typeof teams]?.name}
+             <img src={`https://flagcdn.com/${teams[simulation.bracket['M31'].winner as keyof typeof teams]?.flag}.svg`} width="40" alt="campeão" />
            </div>
            <button
              onClick={handleShare}
@@ -176,7 +146,7 @@ export const Bracket = () => {
                border: 'none'
              }}
            >
-             Compartilhar Resultado
+             Compartilhar Imagem
            </button>
          </div>
        )}
