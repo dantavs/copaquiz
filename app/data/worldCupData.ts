@@ -24,7 +24,7 @@ export const teams = {
   TEAM_19: { id: 'TEAM_19', name: 'Costa do Marfim', flag: 'ci', emoji: '🇨🇮' },
   TEAM_20: { id: 'TEAM_20', name: 'Equador', flag: 'ec', emoji: '🇪🇨' },
 
-  TEAM_21: { id: 'TEAM_21', name: 'Países Baixos', flag: 'nl', emoji: '🇳🇱' },
+  TEAM_21: { id: 'TEAM_21', name: 'Holanda', flag: 'nl', emoji: '🇳🇱' },
   TEAM_22: { id: 'TEAM_22', name: 'Japão', flag: 'jp', emoji: '🇯🇵' },
   TEAM_23: { id: 'TEAM_23', name: 'Suécia', flag: 'se', emoji: '🇸🇪' },
   TEAM_24: { id: 'TEAM_24', name: 'Tunísia', flag: 'tn', emoji: '🇹🇳' },
