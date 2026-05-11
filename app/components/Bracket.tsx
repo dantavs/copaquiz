@@ -143,7 +143,7 @@ export const Bracket = () => {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
       <h2 style={{ fontSize: '2rem', textAlign: 'center' }}>Simulador Mata-Mata</h2>
       
-      {renderRound('Trinta-e-dois Avos de Final', mapping.R32)}
+      {renderRound('16 avos de final', mapping.R32)}
       {renderRound('Oitavas de Final', mapping.R16)}
       {renderRound('Quartas de Final', mapping.QF)}
       {renderRound('Semifinais', mapping.SF)}
