@@ -35,8 +35,28 @@ export const Bracket = () => {
     const championId = simulation.bracket['M31']?.winner;
     if (!championId) return;
 
+    const getTeamName = (teamId?: string) => teamId ? teams[teamId as keyof typeof teams]?.name : 'A definir';
+
+    let shareText = `🏆 Simulador Copa 2026 - Meus palpites:\n\n`;
+    
+    const rounds: Array<{ title: string; matches: BracketMatch[] }> = [
+        { title: 'Oitavas', matches: mapping.R16 || [] },
+        { title: 'Quartas', matches: mapping.QF || [] },
+        { title: 'Semifinal', matches: mapping.SF || [] },
+        { title: 'Final', matches: mapping.Final || [] },
+    ];
+
+    rounds.forEach(round => {
+        shareText += `--- ${round.title} ---\n`;
+        round.matches.forEach(match => {
+            const winnerId = simulation.bracket[match.id]?.winner;
+            shareText += `${getTeamName(match.home.match || match.home.group)} vs ${getTeamName(match.away.match || match.away.group)}: Vencedor: ${getTeamName(winnerId)}\n`;
+        });
+        shareText += `\n`;
+    });
+
     const champion = teams[championId as keyof typeof teams];
-    const shareText = `🏆 Meu campeão da Copa 2026 no Simulador CopaQuiz é: ${champion?.flag} ${champion?.name}! ⚽`;
+    shareText += `🏆 Campeão: ${champion?.flag} ${champion?.name}! ⚽`;
 
     if (navigator.share) {
       try {

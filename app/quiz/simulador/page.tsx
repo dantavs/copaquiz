@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GroupSelection } from '../../components/GroupSelection';
 import { BestThirdsSelection } from '../../components/BestThirdsSelection';
 import { Bracket } from '../../components/Bracket';
@@ -19,6 +19,10 @@ const tabs: Array<{ id: Step; label: string }> = [
 export default function SimulatorPage() {
   const [currentStep, setCurrentStep] = useState<Step>('groups');
   const { simulation, groups } = useSimulationStore();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentStep]);
 
   const isGroupsComplete = Object.entries(groups).every(([groupLetter]) => {
     const selections = simulation.groupSelections[groupLetter] || {};
