@@ -19,9 +19,10 @@ const tabs: Array<{ id: Step; label: string }> = [
 export default function SimulatorPage() {
   const [currentStep, setCurrentStep] = useState<Step>('groups');
   const { simulation, groups } = useSimulationStore();
+  const sectionRef = React.useRef<HTMLElement>(null);
 
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    sectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [currentStep]);
 
   const isGroupsComplete = Object.entries(groups).every(([groupLetter]) => {
@@ -36,6 +37,7 @@ export default function SimulatorPage() {
       <main className="animate-pop" style={{ width: '100%', minHeight: 'calc(100vh - 160px)' }}>
         <div className="container" style={{ display: 'flex', justifyContent: 'center' }}>
           <section
+            ref={sectionRef}
             className="glass"
             style={{
               width: '100%',

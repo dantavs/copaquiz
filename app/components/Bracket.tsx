@@ -31,11 +31,14 @@ export const Bracket = () => {
   const { simulation, setMatchWinner } = useSimulationStore();
   const mapping = bracketMapping as BracketMapping;
 
+  const getResolvedTeamName = (ref: TeamReference) => {
+    const teamId = resolveTeamId(ref);
+    return teamId ? teams[teamId as keyof typeof teams]?.name : 'A definir';
+  };
+
   const handleShare = async () => {
     const championId = simulation.bracket['M31']?.winner;
     if (!championId) return;
-
-    const getTeamName = (teamId?: string) => teamId ? teams[teamId as keyof typeof teams]?.name : 'A definir';
 
     let shareText = `🏆 Simulador Copa 2026 - Meus palpites:\n\n`;
     
@@ -50,7 +53,8 @@ export const Bracket = () => {
         shareText += `--- ${round.title} ---\n`;
         round.matches.forEach(match => {
             const winnerId = simulation.bracket[match.id]?.winner;
-            shareText += `${getTeamName(match.home.match || match.home.group)} vs ${getTeamName(match.away.match || match.away.group)}: Vencedor: ${getTeamName(winnerId)}\n`;
+            const winnerName = winnerId ? teams[winnerId as keyof typeof teams]?.name : 'A definir';
+            shareText += `${getResolvedTeamName(match.home)} vs ${getResolvedTeamName(match.away)}: Vencedor: ${winnerName}\n`;
         });
         shareText += `\n`;
     });
@@ -111,7 +115,12 @@ export const Bracket = () => {
           opacity: teamId ? 1 : 0.75
         }}
       >
-        {team ? `${team.flag} ${team.name}` : 'A definir'}
+        {team ? (
+            <>
+                <span style={{ fontSize: '1.2rem' }}>{team.flag}</span>
+                {team.name}
+            </>
+        ) : 'A definir'}
       </div>
     );
   };

@@ -12,7 +12,7 @@ export const teams = {
   TEAM_09: { id: 'TEAM_09', name: 'Brazil', flag: '🇧🇷' },
   TEAM_10: { id: 'TEAM_10', name: 'Morocco', flag: '🇲🇦' },
   TEAM_11: { id: 'TEAM_11', name: 'Haiti', flag: '🇭🇹' },
-  TEAM_12: { id: 'TEAM_12', name: 'Scotland', flag: '🏴󠁧󠁢󠁳󠁣󠁴󠁿' },
+  TEAM_12: { id: 'TEAM_12', name: 'Scotland', flag: '🇬🇧' },
 
   TEAM_13: { id: 'TEAM_13', name: 'United States', flag: '🇺🇸' },
   TEAM_14: { id: 'TEAM_14', name: 'Paraguay', flag: '🇵🇾' },
@@ -54,7 +54,7 @@ export const teams = {
   TEAM_43: { id: 'TEAM_43', name: 'Uzbekistan', flag: '🇺🇿' },
   TEAM_44: { id: 'TEAM_44', name: 'Colombia', flag: '🇨🇴' },
 
-  TEAM_45: { id: 'TEAM_45', name: 'England', flag: '🏴󠁧󠁢󠁥󠁮󠁧󠁿' },
+  TEAM_45: { id: 'TEAM_45', name: 'England', flag: '🇬🇧' },
   TEAM_46: { id: 'TEAM_46', name: 'Croatia', flag: '🇭🇷' },
   TEAM_47: { id: 'TEAM_47', name: 'Ghana', flag: '🇬🇭' },
   TEAM_48: { id: 'TEAM_48', name: 'Panama', flag: '🇵🇦' },
