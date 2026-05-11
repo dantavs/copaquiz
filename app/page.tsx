@@ -61,8 +61,40 @@ export default function Home() {
               </div>
             </Link>
           </section>
-
-          <section style={{
+ 
+           <section style={{ marginBottom: '4rem', width: '100%', maxWidth: '800px' }}>
+             <Link href="/quiz/simulador" className="glass animate-pop" style={{ 
+               display: 'flex', 
+               alignItems: 'center', 
+               padding: '2rem', 
+               borderRadius: '24px',
+               textDecoration: 'none',
+               color: 'white',
+               border: '2px solid #FFD700',
+               backgroundColor: 'rgba(255, 215, 0, 0.1)',
+               backdropFilter: 'blur(12px)',
+               boxShadow: '0 0 20px rgba(255, 215, 0, 0.3)',
+               gap: '2rem',
+               transition: 'transform 0.3s'
+             }}>
+               <div style={{ fontSize: '4rem' }}>🏆</div>
+               <div>
+                 <h3 style={{ fontSize: '1.8rem', marginBottom: '0.5rem', color: '#FFD700', fontWeight: 900, textTransform: 'uppercase' }}>SIMULADOR: Copa do Mundo 2026</h3>
+                 <p style={{ opacity: 0.9 }}>Monte sua seleção, projete o caminho até a final e descubra quem será o campeão do mundo em 2026!</p>
+                 <div style={{ 
+                   marginTop: '1rem', 
+                   fontWeight: 700, 
+                   color: 'black', 
+                   backgroundColor: '#FFD700', 
+                   display: 'inline-block', 
+                   padding: '0.5rem 1.2rem', 
+                   borderRadius: '9999px' 
+                 }}>Simular agora →</div>
+               </div>
+             </Link>
+           </section>
+ 
+           <section style={{
             display: 'flex',
             flexWrap: 'wrap',
             justifyContent: 'center',
