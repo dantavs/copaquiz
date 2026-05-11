@@ -33,7 +33,7 @@ export const Bracket = () => {
 
   const getResolvedTeamName = (ref: TeamReference) => {
     const teamId = resolveTeamId(ref);
-    return teamId ? teams[teamId as keyof typeof teams]?.name : 'A definir';
+    return teamId ? (teams[teamId as keyof typeof teams]?.emoji || teams[teamId as keyof typeof teams]?.name) : 'A definir';
   };
 
   const handleShare = async () => {
