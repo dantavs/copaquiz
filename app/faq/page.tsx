@@ -115,8 +115,7 @@ export default function FAQPage() {
   ];
 
 
-    const finalFaqSections = [...faqSections, newSection];
-
+  return (
     <>
       <Header />
       <main className="container animate-pop">
