@@ -4,8 +4,13 @@ import React from 'react';
 import { useSimulationStore } from '../lib/simulationStore';
 import { groups, teams } from '../data/worldCupData';
 
-export const GroupSelection = () => {
+export const GroupSelection = ({ onNext }: { onNext: () => void }) => {
   const { simulation, setGroupSelections } = useSimulationStore();
+
+  const isGroupsComplete = Object.entries(groups).every(([groupLetter]) => {
+    const selections = simulation.groupSelections[groupLetter] || {};
+    return selections['1'] && selections['2'] && selections['3'];
+  });
 
   const handleTeamClick = (groupLetter: string, teamId: string) => {
     const currentSelections = simulation.groupSelections[groupLetter] ?? {};
@@ -110,6 +115,27 @@ export const GroupSelection = () => {
           </div>
         );
       })}
+
+      <button
+        onClick={onNext}
+        disabled={!isGroupsComplete}
+        className="btn"
+        style={{
+          width: '100%',
+          background: isGroupsComplete
+            ? 'linear-gradient(135deg, var(--primary), var(--secondary))'
+            : 'rgba(255,255,255,0.05)',
+          color: isGroupsComplete ? 'white' : 'rgba(255,255,255,0.3)',
+          padding: '1rem',
+          borderRadius: '12px',
+          fontWeight: 700,
+          cursor: isGroupsComplete ? 'pointer' : 'not-allowed',
+          border: 'none',
+          marginTop: '1rem'
+        }}
+      >
+        Avançar para a próxima fase
+      </button>
     </div>
   );
 };
