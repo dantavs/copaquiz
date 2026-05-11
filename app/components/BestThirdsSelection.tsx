@@ -4,7 +4,7 @@ import React from 'react';
 import { useSimulationStore } from '../lib/simulationStore';
 import { teams } from '../data/worldCupData';
 
-export const BestThirdsSelection = () => {
+export const BestThirdsSelection = ({ onNext }: { onNext: () => void }) => {
   const { simulation, setTopThird } = useSimulationStore();
   
   // Filtrar todos os times que ficaram em 3º lugar
@@ -81,6 +81,27 @@ export const BestThirdsSelection = () => {
           );
         })}
       </div>
+
+      <button
+        onClick={onNext}
+        disabled={selectedCount !== 8}
+        className="btn"
+        style={{
+          width: '100%',
+          background: selectedCount === 8
+            ? 'linear-gradient(135deg, var(--primary), var(--secondary))'
+            : 'rgba(255,255,255,0.05)',
+          color: selectedCount === 8 ? 'white' : 'rgba(255,255,255,0.3)',
+          padding: '1rem',
+          borderRadius: '12px',
+          fontWeight: 700,
+          cursor: selectedCount === 8 ? 'pointer' : 'not-allowed',
+          border: 'none',
+          marginTop: '1rem'
+        }}
+      >
+        Avançar para o Mata-Mata
+      </button>
     </div>
   );
 };

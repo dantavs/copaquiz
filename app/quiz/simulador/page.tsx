@@ -92,7 +92,7 @@ export default function SimulatorPage() {
             </div>
 
             {currentStep === 'groups' && <GroupSelection onNext={() => setCurrentStep('thirds')} />}
-            {currentStep === 'thirds' && <BestThirdsSelection />}
+            {currentStep === 'thirds' && <BestThirdsSelection onNext={() => setCurrentStep('bracket')} />}
             {currentStep === 'bracket' && <Bracket />}
           </section>
         </div>
