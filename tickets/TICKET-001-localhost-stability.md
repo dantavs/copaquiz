@@ -10,7 +10,7 @@ The user reported that there are messages in the browser console, although their
 - [x] Fix is verified on localhost.
 
 ## Status
-- Status: Resolved
+- Status: Done
 - Priority: High
 - Assignee: @developer (Investigation)
 

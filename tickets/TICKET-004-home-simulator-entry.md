@@ -26,6 +26,6 @@ Create a prominent entry point on the home page (`app/page.tsx`) to allow users 
 - [x] Entry point is visually consistent with other home page elements (like the "Adivinhe o Jogador" card).
 
 ## Status
-- Status: Closed
+- Status: Done
 - Priority: Medium
 - Assignee: @product_owner / @designer

@@ -11,7 +11,7 @@ ideia
 ![[Pasted image 20260511191716.png]]
 
 ## Status
-- Status: In Progress
+- Status: Done
 - Priority: High
 - Assignee: @designer
 

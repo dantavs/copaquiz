@@ -141,7 +141,7 @@ Abaixo está a distribuição simulada das 48 seleções nos 12 grupos (A-L):
 - **Grupo L:** Suécia, Costa Rica, África do Sul, Iraque
 
 ## Status
-- Status: In Progress (Adding Share Feature)
+- Status: Done
 - Priority: Medium
 - Assignee: @developer (Implementation)
 
