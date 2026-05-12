@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, Suspense, useMemo } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Player, players } from '../data/players';
 import { calculateStreakProgress, getTrophyStates } from '../lib/streak-utils';
+import { checkAndCleanDailyGuesses } from '../lib/daily-cleanup';
 
 // Mapeamento de Continentes para a regra da cor Amarela
 const CONTINENTS: Record<string, string> = {
@@ -61,6 +62,11 @@ function DleGameContent() {
     const index = Math.abs(hash) % players.length;
     return players[index];
   };
+
+  // Limpeza diária: roda apenas uma vez na montagem do componente
+  useEffect(() => {
+    checkAndCleanDailyGuesses();
+  }, []);
 
   // Carregar estado inicial
   useEffect(() => {
