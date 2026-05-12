@@ -44,14 +44,26 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" className={`${outfit.variable} ${inter.variable}`}>
-      <head>
-        <Script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-9579596619646258"
-          crossOrigin="anonymous"
-          strategy="lazyOnload"
-        />
-      </head>
+       <head>
+         <Script
+           async
+           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=pub-9579596619646258"
+           crossOrigin="anonymous"
+           strategy="lazyOnload"
+         />
+         <Script
+           src="https://www.googletagmanager.com/gtag/js?id=G-HMF9LNHGX7"
+           strategy="afterInteractive"
+         />
+         <Script id="google-analytics">
+           {`
+             window.dataLayer = window.dataLayer || [];
+             function gtag(){dataLayer.push(arguments);}
+             gtag('js', new Date());
+             gtag('config', 'G-HMF9LNHGX7');
+           `}
+         </Script>
+       </head>
       <body>
         {children}
         <Chatbot />
