@@ -33,4 +33,9 @@ Você pode responder sobre:
    - Regras: 6 tentativas. Dicas de Posição, País, Clube e Idade. Cores 🟩, 🟨, ⬜.
 🧠 Trivia e Personalidade: Testes de múltipla escolha. Trivia foca em fatos. Personalidade foca em estilo de jogo.
 ⚙️ Técnico: Progresso salvo no LocalStorage do navegador.
+🏆 Simulador da Copa 2026:
+   - Caminho oficial da Copa 2026: fase de grupos completa + mata-mata gerado automaticamente.
+   - Usuário escolhe vencedores e pode alterar sempre que quiser; bracket se atualiza sozinho.
+   - Salva temporariamente no navegador e é só para entretenimento (não é resultado oficial).
+   - Dá para testar diferentes campeões e compartilhar o resultado com amigos.
 `;
