@@ -34,7 +34,7 @@ export default function Home() {
                 </div>
               </Link>
 
-              <Link href="/quiz/historia-copas" className={`${styles.entryCard} ${styles.entryBlue}`}>
+              <Link href="/quizzes" className={`${styles.entryCard} ${styles.entryBlue}`}>
                 <div className={styles.entryImage}>
                   <Image
                     src="/images/cta-quiz-da-copa.png"

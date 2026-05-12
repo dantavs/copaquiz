@@ -29,6 +29,7 @@ export interface Quiz {
   category: string;
   difficulty: 'Fácil' | 'Médio' | 'Difícil';
   image: string;
+  emoji?: string;
   questions: Question[];
   // Apenas para Personalidade
   outcomes?: QuizOutcome[];
@@ -43,6 +44,7 @@ export const quizzes: Quiz[] = [
     category: 'História',
     difficulty: 'Médio',
     image: '/images/historia.jpg',
+    emoji: '🏆',
     questions: [
       {
         id: 'q1',
@@ -154,6 +156,7 @@ export const quizzes: Quiz[] = [
     category: 'Perfil',
     difficulty: 'Fácil',
     image: '/images/perfil.jpg',
+    emoji: '🎭',
     outcomes: [
       {
         id: 'atacante',
@@ -267,6 +270,7 @@ export const quizzes: Quiz[] = [
     category: 'Seleções',
     difficulty: 'Fácil',
     image: '/images/copa2026.jpg',
+    emoji: '🌍',
     outcomes: [
       {
         id: 'brasil',

@@ -9,9 +9,9 @@ Adicionar um link para a página "Sobre o CopaQuiz" no componente de rodapé par
 - [x] Estilização consistente com os demais links do rodapé.
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: Medium
-- Assignee: @manager (Review/Coordination)
+- Assignee: @devops (Deployed)
 
 ## Notes
 - Implementação realizada manualmente pelo Manager para agilizar, mas agora seguindo o fluxo de deploy.

@@ -1,20 +1,15 @@
 import Link from 'next/link';
 import { Quiz } from '../data/quizzes';
 
-export default function QuizCard({ quiz }: { quiz: Quiz }) {
-  return (
-    <div className="glass animate-pop" style={{
-      borderRadius: 'var(--border-radius)',
-      overflow: 'hidden',
-      transition: 'var(--transition)',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      cursor: 'pointer',
-      flex: '1 1 300px', // Cresce e encolhe com base em 300px
-      maxWidth: '350px', // Evita que fique muito largo no desktop
-      width: '100%'      // Garante preenchimento no mobile
-    }}>
+interface QuizCardProps {
+  quiz: Quiz;
+  /** Quando definido, o card inteiro se torna um link para esta URL */
+  href?: string;
+}
+
+export default function QuizCard({ quiz, href }: QuizCardProps) {
+  const content = (
+    <>
       <div style={{
         height: '180px',
         background: `linear-gradient(135deg, var(--secondary), var(--primary))`,
@@ -25,7 +20,7 @@ export default function QuizCard({ quiz }: { quiz: Quiz }) {
         fontSize: '4rem',
         textShadow: '0 4px 10px rgba(0,0,0,0.3)'
       }}>
-        {quiz.id === 'historia-copas' ? '🏆' : '⚽'}
+        {quiz.emoji || '⚽'}
       </div>
       <div style={{ padding: '1.5rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.8rem' }}>
@@ -56,10 +51,49 @@ export default function QuizCard({ quiz }: { quiz: Quiz }) {
           marginBottom: '1.5rem',
           flex: 1
         }}>{quiz.description}</p>
-        <Link href={`/quiz/${quiz.id}`} className="btn btn-primary" style={{ width: '100%' }}>
-          Jogar Agora ⚡
-        </Link>
+        {!href && (
+          <Link href={`/quiz/${quiz.id}`} className="btn btn-primary" style={{ width: '100%' }}>
+            Jogar Agora ⚡
+          </Link>
+        )}
       </div>
+    </>
+  );
+
+  if (href) {
+    return (
+      <Link href={href} className="glass animate-pop" style={{
+        borderRadius: 'var(--border-radius)',
+        overflow: 'hidden',
+        transition: 'var(--transition)',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        textDecoration: 'none',
+        color: 'inherit',
+        flex: '1 1 300px',
+        maxWidth: '350px',
+        width: '100%'
+      }}>
+        {content}
+      </Link>
+    );
+  }
+
+  return (
+    <div className="glass animate-pop" style={{
+      borderRadius: 'var(--border-radius)',
+      overflow: 'hidden',
+      transition: 'var(--transition)',
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
+      cursor: 'pointer',
+      flex: '1 1 300px',
+      maxWidth: '350px',
+      width: '100%'
+    }}>
+      {content}
     </div>
   );
 }
