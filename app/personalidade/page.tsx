@@ -1,8 +1,3 @@
-import Header from '../components/Header';
-import Footer from '../components/Footer';
-import QuizCard from '../components/QuizCard';
-import { quizzes } from '../data/quizzes';
-
 import { Metadata } from 'next';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
