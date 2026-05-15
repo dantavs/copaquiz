@@ -1,11 +1,11 @@
 import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://copaquiz.com'; // Adjust to your actual domain
+  const baseUrl = 'https://copaquiz.com';
 
   return [
     {
-      url: baseUrl,
+      url: `${baseUrl}/`,
       lastModified: new Date(),
     },
     {
