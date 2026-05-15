@@ -9,39 +9,39 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/quizzes`,
+      url: `${baseUrl}/quizzes/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/trivia`,
+      url: `${baseUrl}/trivia/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/personalidade`,
+      url: `${baseUrl}/personalidade/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/quiz/simulador`,
+      url: `${baseUrl}/quiz/simulador/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/quem-e`,
+      url: `${baseUrl}/quem-e/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/blog`,
+      url: `${baseUrl}/blog/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/sobre-o-copaquiz`,
+      url: `${baseUrl}/sobre-o-copaquiz/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/termos`,
+      url: `${baseUrl}/termos/`,
       lastModified: new Date(),
     },
     {
-      url: `${baseUrl}/privacidade`,
+      url: `${baseUrl}/privacidade/`,
       lastModified: new Date(),
     },
   ];
