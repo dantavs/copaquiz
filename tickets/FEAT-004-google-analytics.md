@@ -9,9 +9,9 @@ Implementar a tag de rastreamento do Google Analytics (G-HMF9LNHGX7) no layout g
 - [x] Utilizar o componente `next/script` para otimização de carregamento.
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: Medium
-- Assignee: @manager (Review)
+- Assignee: @devops (Deployed)
 
 ## Notes
 - Implementado via `next/script` com a estratégia `afterInteractive`.

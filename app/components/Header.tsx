@@ -12,7 +12,7 @@ export default function Header() {
     }}>
       <div className="container" style={{
         display: 'flex',
-        justifyContent: 'center', // Centraliza o logo agora que não há links
+        justifyContent: 'space-between',
         alignItems: 'center'
       }}>
         <Link href="/" style={{ display: 'flex', alignItems: 'center' }}>
@@ -25,6 +25,11 @@ export default function Header() {
             style={{ display: 'block' }}
           />
         </Link>
+        <nav>
+          <Link href="/blog" className="btn btn-primary" style={{ padding: '8px 16px', fontSize: '0.9rem' }}>
+            Blog
+          </Link>
+        </nav>
       </div>
     </header>
   );

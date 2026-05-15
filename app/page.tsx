@@ -1,9 +1,19 @@
+import { Metadata } from 'next';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Link from 'next/link';
 import Image from 'next/image';
 import styles from './page.module.css';
 import DailyCountdown from './components/DailyCountdown';
+
+export const metadata: Metadata = {
+  title: 'CopaQuiz | O maior desafio da Copa do Mundo',
+  description: 'Teste seus conhecimentos sobre a Copa do Mundo com quizzes, trivia e desafios diários!',
+  openGraph: {
+    title: 'CopaQuiz | O maior desafio da Copa do Mundo',
+    description: 'Teste seus conhecimentos sobre a Copa do Mundo com quizzes, trivia e desafios diários!',
+  },
+};
 
 export default function Home() {
   return (

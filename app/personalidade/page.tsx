@@ -3,9 +3,19 @@ import Footer from '../components/Footer';
 import QuizCard from '../components/QuizCard';
 import { quizzes } from '../data/quizzes';
 
-export const metadata = {
-  title: "Quizzes de Personalidade - Copa Quiz",
+import { Metadata } from 'next';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import QuizCard from '../components/QuizCard';
+import { quizzes } from '../data/quizzes';
+
+export const metadata: Metadata = {
+  title: "Quizzes de Personalidade | CopaQuiz",
   description: "Descubra qual jogador da Copa do Mundo você seria ou qual seleção combina mais com seu estilo.",
+  openGraph: {
+    title: "Quizzes de Personalidade | CopaQuiz",
+    description: "Descubra qual jogador da Copa do Mundo você seria ou qual seleção combina mais com seu estilo.",
+  },
 };
 
 export default function PersonalidadePage() {

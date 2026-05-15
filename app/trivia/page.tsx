@@ -3,9 +3,19 @@ import Footer from '../components/Footer';
 import QuizCard from '../components/QuizCard';
 import { quizzes } from '../data/quizzes';
 
-export const metadata = {
-  title: "Quizzes Trivia de Futebol - Copa Quiz",
+import { Metadata } from 'next';
+import Header from '../components/Header';
+import Footer from '../components/Footer';
+import QuizCard from '../components/QuizCard';
+import { quizzes } from '../data/quizzes';
+
+export const metadata: Metadata = {
+  title: "Quizzes Trivia de Futebol | CopaQuiz",
   description: "Teste seus conhecimentos técnicos sobre futebol, seleções e a Copa do Mundo em nossos quizzes de trivia.",
+  openGraph: {
+    title: "Quizzes Trivia de Futebol | CopaQuiz",
+    description: "Teste seus conhecimentos técnicos sobre futebol, seleções e a Copa do Mundo em nossos quizzes de trivia.",
+  },
 };
 
 export default function TriviaPage() {
