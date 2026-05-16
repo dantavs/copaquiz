@@ -74,9 +74,11 @@ export function getAlbum(code: string): AlbumData | null {
 export function updateStickers(code: string, stickers: Record<string, number>): AlbumData | null {
   const album = getAlbum(code);
   if (!album) return null;
-  for (const [id, qty] of Object.entries(stickers)) {
-    album.stickers[id] = (album.stickers[id] ?? 0) + qty;
-    if (album.stickers[id] <= 0) delete album.stickers[id];
+  // Replace stickers completely (syncAlbum sends full state, not delta)
+  album.stickers = { ...stickers };
+  // Clean up zero values
+  for (const [id, qty] of Object.entries(album.stickers)) {
+    if (qty <= 0) delete album.stickers[id];
   }
   album.updatedAt = new Date().toISOString();
   fs.writeFileSync(filePath(code), JSON.stringify(album, null, 2), 'utf-8');

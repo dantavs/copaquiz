@@ -39,13 +39,18 @@ export const useCollectorStore = create<AlbumStore>()(
       setCurrentAlbum: (code) => set({ currentAlbumCode: code }),
 
       loadAlbums: async () => {
-        const res = await fetch('/api/albums');
-        const data = await res.json();
-        const map: Record<string, AlbumData> = {};
-        for (const album of data) {
-          map[album.code] = album;
+        try {
+          const res = await fetch('/api/albums');
+          if (!res.ok) return;
+          const data = await res.json();
+          const map: Record<string, AlbumData> = {};
+          for (const album of data) {
+            map[album.code] = album;
+          }
+          set({ albums: map });
+        } catch {
+          // Silently fail - albums will remain as-is (from localStorage)
         }
-        set({ albums: map });
       },
 
       loadAlbum: async (code) => {
