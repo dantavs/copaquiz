@@ -122,6 +122,16 @@ export default function CollectorPage() {
 
   const albumList = useMemo(() => Object.values(albums), [albums]);
 
+  // Poll server every 30s for updates from other users
+  const pollAlbum = useCollectorStore((s) => s.pollAlbum);
+  useEffect(() => {
+    if (!currentAlbumCode) return;
+    const interval = setInterval(() => {
+      pollAlbum();
+    }, 30000);
+    return () => clearInterval(interval);
+  }, [currentAlbumCode, pollAlbum]);
+
   useEffect(() => {
     loadAlbums().finally(() => setLoading(false));
   }, [loadAlbums]);

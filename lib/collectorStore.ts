@@ -24,6 +24,7 @@ interface StoreActions {
   increment: (stickerId: string) => void;
   decrement: (stickerId: string) => void;
   syncAlbum: () => Promise<void>;
+  pollAlbum: () => Promise<void>;
 }
 
 export type AlbumStore = StoreState & StoreActions;
@@ -46,13 +47,39 @@ export const useCollectorStore = create<AlbumStore>()(
             map[album.code] = { ...album };
           }
           set({ albums: map });
-          // If currentAlbumCode is set but album not loaded yet, load it
           const currentCode = get().currentAlbumCode;
           if (currentCode && !map[currentCode]) {
             set({ currentAlbumCode: null });
           }
         } catch {
           // Keep data from localStorage if API fails
+        }
+      },
+
+      pollAlbum: async () => {
+        const code = get().currentAlbumCode;
+        if (!code) return;
+        try {
+          const res = await fetch(`/api/albums/${code}`);
+          if (!res.ok) return;
+          const serverAlbum: AlbumData = await res.json();
+          set((state) => {
+            const localAlbum = state.albums[code];
+            if (!localAlbum) return { albums: { ...state.albums, [code]: serverAlbum } };
+            // Merge: keep the highest quantity for each sticker
+            const merged = { ...serverAlbum.stickers };
+            for (const [id, qty] of Object.entries(localAlbum.stickers)) {
+              merged[id] = Math.max(merged[id] ?? 0, qty);
+            }
+            return {
+              albums: {
+                ...state.albums,
+                [code]: { ...serverAlbum, stickers: merged },
+              },
+            };
+          });
+        } catch {
+          // Silently fail
         }
       },
 
