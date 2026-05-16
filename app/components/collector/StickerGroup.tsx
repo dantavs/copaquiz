@@ -9,6 +9,9 @@ interface Props {
   onIncrement: (id: string) => void;
   onDecrement: (id: string) => void;
   initialExpanded?: boolean;
+  totalInGroup: number;
+  collectedInGroup: number;
+  showProgress: boolean;
 }
 
 const badgeStyle: React.CSSProperties = {
@@ -68,11 +71,11 @@ const rarityCard: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function StickerGroup({ groupName, stickers, owned, onIncrement, onDecrement, initialExpanded = true }: Props) {
+export default function StickerGroup({ groupName, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress }: Props) {
   const [expanded, setExpanded] = useState(initialExpanded);
 
-  const collected = stickers.filter((s) => (owned[s.id] ?? 0) > 0).length;
-  const total = stickers.length;
+  const collected = collectedInGroup;
+  const total = totalInGroup;
 
   return (
     <div style={{
@@ -120,22 +123,24 @@ export default function StickerGroup({ groupName, stickers, owned, onIncrement, 
           </span>
         </div>
         {/* Progress bar */}
-        <div style={{
-          marginTop: '0.5rem',
-          width: '100%',
-          height: '6px',
-          borderRadius: '999px',
-          background: 'rgba(255,255,255,0.1)',
-          overflow: 'hidden',
-        }}>
+        {showProgress && (
           <div style={{
-            height: '100%',
-            width: `${total > 0 ? (collected / total) * 100 : 0}%`,
+            marginTop: '0.5rem',
+            width: '100%',
+            height: '6px',
             borderRadius: '999px',
-            background: 'linear-gradient(90deg, var(--primary), var(--secondary))',
-            transition: 'width 0.4s ease',
-          }} />
-        </div>
+            background: 'rgba(255,255,255,0.1)',
+            overflow: 'hidden',
+          }}>
+            <div style={{
+              height: '100%',
+              width: `${total > 0 ? (collected / total) * 100 : 0}%`,
+              borderRadius: '999px',
+              background: 'linear-gradient(90deg, var(--primary), var(--secondary))',
+              transition: 'width 0.4s ease',
+            }} />
+          </div>
+        )}
       </button>
 
       <div style={{

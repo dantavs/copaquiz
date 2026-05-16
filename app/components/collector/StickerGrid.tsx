@@ -32,16 +32,10 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
   const increment = useCollectorStore((s) => s.increment);
   const decrement = useCollectorStore((s) => s.decrement);
 
-  const groups = useMemo(() => {
-    const filtered = stickers.filter((s) => {
-      const q = owned[s.id] ?? 0;
-      if (filter === 'repeated') return q > 1;
-      if (filter === 'missing') return q === 0;
-      return true;
-    });
-
-    const map = new Map<string, typeof filtered>();
-    for (const s of filtered) {
+  // Full groups (unfiltered) for header stats
+  const fullGroups = useMemo(() => {
+    const map = new Map<string, typeof stickers>();
+    for (const s of stickers) {
       const prefix = getPrefix(s.id);
       const group = map.get(prefix);
       if (group) {
@@ -50,22 +44,33 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
         map.set(prefix, [s]);
       }
     }
-
     const groupList = Array.from(map.entries()).map(([prefix, items]) => ({
       prefix,
       groupName: countryMap[prefix] ?? prefix,
       items,
     }));
-
     const specials = ['FWC', 'CC'];
     const regular = groupList.filter((g) => !specials.includes(g.prefix));
     const specialGroups = groupList.filter((g) => specials.includes(g.prefix));
     return [...regular, ...specialGroups];
-  }, [filter, owned]);
+  }, []);
+
+  // Filtered groups for card display
+  const filteredGroups = useMemo(() => {
+    return fullGroups.map((group) => ({
+      ...group,
+      items: group.items.filter((s) => {
+        const q = owned[s.id] ?? 0;
+        if (filter === 'repeated') return q > 1;
+        if (filter === 'missing') return q === 0;
+        return true;
+      }),
+    }));
+  }, [filter, owned, fullGroups]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {groups.map((group) => (
+      {filteredGroups.map((group) => (
         <StickerGroup
           key={group.prefix}
           groupName={group.groupName}
@@ -73,6 +78,9 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
           owned={owned}
           onIncrement={increment}
           onDecrement={decrement}
+          totalInGroup={fullGroups.find((g) => g.prefix === group.prefix)?.items.length ?? 0}
+          collectedInGroup={fullGroups.find((g) => g.prefix === group.prefix)?.items.filter((s) => (owned[s.id] ?? 0) > 0).length ?? 0}
+          showProgress={filter !== 'repeated'}
         />
       ))}
     </div>
