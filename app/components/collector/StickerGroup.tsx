@@ -13,19 +13,20 @@ interface Props {
 
 const badgeStyle: React.CSSProperties = {
   position: 'absolute',
-  top: '-8px',
-  right: '-8px',
+  top: '4px',
+  right: '4px',
   background: 'var(--primary)',
   color: '#000',
   fontWeight: 800,
-  fontSize: '0.75rem',
-  minWidth: '22px',
-  height: '22px',
+  fontSize: '0.7rem',
+  minWidth: '20px',
+  height: '20px',
   borderRadius: '999px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
+  zIndex: 2,
 };
 
 const btnStyle: React.CSSProperties = {
@@ -87,38 +88,54 @@ export default function StickerGroup({ groupName, stickers, owned, onIncrement, 
         style={{
           width: '100%',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          flexDirection: 'column',
           padding: '1rem 1.25rem',
           background: 'none',
           border: 'none',
           color: '#fff',
           cursor: 'pointer',
-          fontSize: '1rem',
-          fontWeight: 700,
           textAlign: 'left',
           transition: 'var(--transition)',
         }}
         aria-expanded={expanded}
       >
-        <span>{groupName}</span>
-        <span style={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: '0.75rem',
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          opacity: 0.85,
-        }}>
-          <span>{collected}/{total}</span>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+          <span style={{ fontWeight: 700, fontSize: '1rem' }}>{groupName}</span>
           <span style={{
-            transition: 'transform 0.3s ease',
-            transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
-            fontSize: '0.75rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem',
+            fontSize: '0.85rem',
+            fontWeight: 600,
+            opacity: 0.85,
           }}>
-            &#9660;
+            <span>{collected}/{total}</span>
+            <span style={{
+              transition: 'transform 0.3s ease',
+              transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
+              fontSize: '0.75rem',
+            }}>
+              &#9660;
+            </span>
           </span>
-        </span>
+        </div>
+        {/* Progress bar */}
+        <div style={{
+          marginTop: '0.5rem',
+          width: '100%',
+          height: '6px',
+          borderRadius: '999px',
+          background: 'rgba(255,255,255,0.1)',
+          overflow: 'hidden',
+        }}>
+          <div style={{
+            height: '100%',
+            width: `${total > 0 ? (collected / total) * 100 : 0}%`,
+            borderRadius: '999px',
+            background: 'linear-gradient(90deg, var(--primary), var(--secondary))',
+            transition: 'width 0.4s ease',
+          }} />
+        </div>
       </button>
 
       <div style={{

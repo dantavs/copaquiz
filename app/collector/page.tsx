@@ -8,9 +8,9 @@ import { stickers } from '@/data/collector2026';
 import type { FilterMode } from '../components/collector/StickerGrid';
 
 const filters: { key: FilterMode; label: string }[] = [
-  { key: 'all', label: 'Todas' },
-  { key: 'repeated', label: 'Repetidas' },
   { key: 'missing', label: 'Faltantes' },
+  { key: 'repeated', label: 'Repetidas' },
+  { key: 'all', label: 'Todas' },
 ];
 
 const tabStyle = (active: boolean): React.CSSProperties => ({
