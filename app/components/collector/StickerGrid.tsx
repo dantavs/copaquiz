@@ -1,11 +1,23 @@
 'use client';
+import { useMemo } from 'react';
 import { useCollectorStore } from '@/lib/collectorStore';
 import { stickers } from '@/data/collector2026';
 
-export default function StickerGrid() {
+export type FilterMode = 'all' | 'repeated' | 'missing';
+
+export default function StickerGrid({ filter }: { filter: FilterMode }) {
   const owned = useCollectorStore((s) => s.owned);
   const increment = useCollectorStore((s) => s.increment);
   const decrement = useCollectorStore((s) => s.decrement);
+
+  const filtered = useMemo(() => {
+    return stickers.filter((s) => {
+      const q = owned[s.id] ?? 0;
+      if (filter === 'repeated') return q > 1;
+      if (filter === 'missing') return q === 0;
+      return true;
+    });
+  }, [filter, owned]);
 
   const badgeStyle: React.CSSProperties = {
     position: 'absolute',
@@ -69,7 +81,7 @@ export default function StickerGrid() {
       gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))',
       gap: '1rem',
     }}>
-      {stickers.map(sticker => {
+      {filtered.map(sticker => {
         const quantity = owned[sticker.id] ?? 0;
         return (
           <div
