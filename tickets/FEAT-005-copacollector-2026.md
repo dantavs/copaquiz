@@ -16,13 +16,13 @@ Como um colecionador de figurinhas da Copa do Mundo, quero poder gerenciar minha
 - [x] [TASK-008](TASK-008-controles-quantidade-grade.md): Controles de quantidade (+/-) na grade ✅
 - [x] [TASK-009](TASK-009-secoes-repetidas-faltantes.md): Seções "Repetidas" e "Faltantes" ✅
 
-### Fase C — Álbuns
-- [ ] [TASK-010](TASK-010-crud-albuns.md): CRUD de álbuns
+### Fase C — Álbuns ⏳
+- [x] [TASK-010](TASK-010-crud-albuns.md): CRUD de álbuns ✅
 - [ ] [TASK-011](TASK-011-dashboard-progresso-album.md): Dashboard de progresso do álbum
 
-### Fase D — Compartilhamento
-- [ ] [TASK-012](TASK-012-compartilhar-album.md): Compartilhar álbum via link/código
-- [ ] [TASK-013](TASK-013-entrar-album-compartilhado.md): Entrar em álbum compartilhado
+### Fase D — Compartilhamento ⏳
+- [x] [TASK-012](TASK-012-compartilhar-album.md): Compartilhar álbum via link/código ✅
+- [x] [TASK-013](TASK-013-entrar-album-compartilhado.md): Entrar em álbum compartilhado ✅
 
 ### Fase E — Exportação
 - [ ] [TASK-014](TASK-014-exportar-faltantes.md): Exportar lista de faltantes

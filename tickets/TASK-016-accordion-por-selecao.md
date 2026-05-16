@@ -13,7 +13,7 @@ Agrupar as figurinhas por seleção/equipe na grade do CopaCollector, utilizando
 - [ ] Estado expandido/colapsado persiste visualmente (não precisa persistir em store)
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: High
 - Assignee: @developer
 

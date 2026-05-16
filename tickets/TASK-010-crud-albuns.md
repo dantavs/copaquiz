@@ -11,7 +11,7 @@ Implementar um seletor de álbuns na página do colecionador, permitindo que o u
 - [ ] Ao menos um álbum padrão ("Meu Álbum") existe ao acessar a página pela primeira vez
 
 ## Status
-- Status: To Do
+- Status: Review
 - Priority: High
 - Assignee: @developer
 

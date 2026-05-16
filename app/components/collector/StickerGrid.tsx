@@ -28,11 +28,13 @@ function getPrefix(id: string): string {
 }
 
 export default function StickerGrid({ filter }: { filter: FilterMode }) {
-  const owned = useCollectorStore((s) => s.owned);
+  const currentAlbumCode = useCollectorStore((s) => s.currentAlbumCode);
+  const albums = useCollectorStore((s) => s.albums);
+  const owned = currentAlbumCode && albums[currentAlbumCode]
+    ? albums[currentAlbumCode].stickers : {};
   const increment = useCollectorStore((s) => s.increment);
   const decrement = useCollectorStore((s) => s.decrement);
 
-  // Full groups (unfiltered) for header stats
   const fullGroups = useMemo(() => {
     const map = new Map<string, typeof stickers>();
     for (const s of stickers) {
@@ -55,7 +57,6 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
     return [...regular, ...specialGroups];
   }, []);
 
-  // Filtered groups for card display
   const filteredGroups = useMemo(() => {
     return fullGroups.map((group) => ({
       ...group,
