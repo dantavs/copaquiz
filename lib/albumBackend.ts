@@ -10,13 +10,6 @@ export interface AlbumData {
   stickers: Record<string, number>;
 }
 
-export interface AlbumSummary {
-  code: string;
-  name: string;
-  owner: string;
-  createdAt: string;
-}
-
 const DATA_DIR = path.join(process.cwd(), 'data', 'albums');
 
 function ensureDir(): void {
@@ -63,12 +56,12 @@ export function createAlbum(name: string, owner: string): AlbumData {
   return album;
 }
 
-export function listAlbums(): AlbumSummary[] {
+export function listAlbums(): AlbumData[] {
   ensureDir();
   const files = fs.readdirSync(DATA_DIR).filter(f => f.endsWith('.json'));
   return files.map(f => {
     const data: AlbumData = JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf-8'));
-    return { code: data.code, name: data.name, owner: data.owner, createdAt: data.createdAt };
+    return data;
   });
 }
 
