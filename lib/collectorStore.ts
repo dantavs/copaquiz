@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-import type { Sticker } from '../data/collector2026';
+import type { Sticker } from '@/data/collector2026';
 
 export interface CollectorState {
   owned: Record<string, number>;
