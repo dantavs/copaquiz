@@ -31,7 +31,7 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
   const currentAlbumCode = useCollectorStore((s) => s.currentAlbumCode);
   const albums = useCollectorStore((s) => s.albums);
   const owned = currentAlbumCode && albums[currentAlbumCode]
-    ? albums[currentAlbumCode].stickers : {};
+    ? (albums[currentAlbumCode].stickers ?? {}) : {};
   const increment = useCollectorStore((s) => s.increment);
   const decrement = useCollectorStore((s) => s.decrement);
 

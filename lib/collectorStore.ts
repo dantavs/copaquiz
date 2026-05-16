@@ -9,13 +9,14 @@ export interface AlbumData {
   createdAt: string;
 }
 
-export interface AlbumStore {
+interface StoreState {
   albums: Record<string, AlbumData>;
   currentAlbumCode: string | null;
-  readonly currentAlbumName: string;
+}
+
+interface StoreActions {
   setCurrentAlbum: (code: string) => void;
   loadAlbums: () => Promise<void>;
-  loadAlbum: (code: string) => Promise<void>;
   addAlbum: (name: string, owner: string) => Promise<string>;
   joinAlbum: (code: string) => Promise<void>;
   renameAlbum: (code: string, name: string) => Promise<void>;
@@ -25,16 +26,13 @@ export interface AlbumStore {
   syncAlbum: () => Promise<void>;
 }
 
+export type AlbumStore = StoreState & StoreActions;
+
 export const useCollectorStore = create<AlbumStore>()(
   persist(
     (set, get) => ({
       albums: {},
       currentAlbumCode: null,
-
-      get currentAlbumName() {
-        const code = get().currentAlbumCode;
-        return code && get().albums[code] ? get().albums[code].name : 'Meu Álbum';
-      },
 
       setCurrentAlbum: (code) => set({ currentAlbumCode: code }),
 
@@ -45,20 +43,17 @@ export const useCollectorStore = create<AlbumStore>()(
           const data = await res.json();
           const map: Record<string, AlbumData> = {};
           for (const album of data) {
-            map[album.code] = album;
+            map[album.code] = { ...album };
           }
           set({ albums: map });
+          // If currentAlbumCode is set but album not loaded yet, load it
+          const currentCode = get().currentAlbumCode;
+          if (currentCode && !map[currentCode]) {
+            set({ currentAlbumCode: null });
+          }
         } catch {
-          // Silently fail - albums will remain as-is (from localStorage)
+          // Keep data from localStorage if API fails
         }
-      },
-
-      loadAlbum: async (code) => {
-        const res = await fetch(`/api/albums/${code}`);
-        const album = await res.json();
-        set((state) => ({
-          albums: { ...state.albums, [code]: album },
-        }));
       },
 
       addAlbum: async (name, owner) => {
@@ -147,20 +142,20 @@ export const useCollectorStore = create<AlbumStore>()(
         const code = get().currentAlbumCode;
         if (!code || !get().albums[code]) return;
         const album = get().albums[code];
-        await fetch(`/api/albums/${code}`, {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ stickers: album.stickers }),
-        });
+        try {
+          await fetch(`/api/albums/${code}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ stickers: album.stickers }),
+          });
+        } catch {
+          // Silently fail - data is safe in localStorage
+        }
       },
     }),
     {
       name: 'collector-storage',
-      version: 1,
-      partialize: (state) => {
-        const { currentAlbumName: _, ...rest } = state as unknown as AlbumStore & { currentAlbumName: string };
-        return rest;
-      },
+      version: 2,
     }
   )
 );

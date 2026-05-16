@@ -109,7 +109,8 @@ export default function CollectorPage() {
 
   const albums = useCollectorStore((s) => s.albums);
   const currentAlbumCode = useCollectorStore((s) => s.currentAlbumCode);
-  const currentAlbumName = useCollectorStore((s) => s.currentAlbumName);
+  const currentAlbumName = currentAlbumCode && albums[currentAlbumCode]
+    ? albums[currentAlbumCode].name : 'Meu Álbum';
   const setCurrentAlbum = useCollectorStore((s) => s.setCurrentAlbum);
   const loadAlbums = useCollectorStore((s) => s.loadAlbums);
   const addAlbum = useCollectorStore((s) => s.addAlbum);
