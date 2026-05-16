@@ -11,7 +11,7 @@ Implementar funcionalidade de compartilhamento de álbum, gerando um código ún
 - [ ] Códigos são únicos por álbum
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: Medium
 - Assignee: @developer
 

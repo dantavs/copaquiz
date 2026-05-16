@@ -11,7 +11,7 @@ Criar funcionalidade para que um usuário entre em um álbum compartilhado por o
 - [ ] Código inválido mostra mensagem de erro amigável ("Código não encontrado")
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: Medium
 - Assignee: @developer
 
