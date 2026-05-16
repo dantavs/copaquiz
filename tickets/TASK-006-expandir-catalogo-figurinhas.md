@@ -11,7 +11,7 @@ Popular o arquivo `app/data/collector2026.ts` com a lista completa de figurinhas
 - [ ] Nenhum sticker com nome vazio ou duplicado
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: High
 - Assignee: @developer
 

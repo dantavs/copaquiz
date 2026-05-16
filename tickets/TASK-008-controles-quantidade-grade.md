@@ -10,7 +10,7 @@ Adicionar botões de incremento/decremento em cada card da grade de figurinhas, 
 - [ ] Raridade da figurinha é refletida visualmente (cor/moldura diferente para NORMAL, HOLOGRAPHIC, GOLDEN, SPECIAL)
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: High
 - Assignee: @developer
 

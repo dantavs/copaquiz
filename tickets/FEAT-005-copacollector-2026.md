@@ -12,9 +12,9 @@ Como um colecionador de figurinhas da Copa do Mundo, quero poder gerenciar minha
 - [x] [TASK-006](TASK-006-expandir-catalogo-figurinhas.md): Expandir catálogo de figurinhas (~680 stickers) ✅
 - [x] [TASK-007](TASK-007-store-persistente-colecao.md): Store persistente da coleção (Zustand) ✅
 
-### Fase B — Grid Interativo
-- [ ] [TASK-008](TASK-008-controles-quantidade-grade.md): Controles de quantidade (+/-) na grade
-- [ ] [TASK-009](TASK-009-secoes-repetidas-faltantes.md): Seções "Repetidas" e "Faltantes"
+### Fase B — Grid Interativo (✅ Concluída)
+- [x] [TASK-008](TASK-008-controles-quantidade-grade.md): Controles de quantidade (+/-) na grade ✅
+- [x] [TASK-009](TASK-009-secoes-repetidas-faltantes.md): Seções "Repetidas" e "Faltantes" ✅
 
 ### Fase C — Álbuns
 - [ ] [TASK-010](TASK-010-crud-albuns.md): CRUD de álbuns

@@ -11,7 +11,7 @@ Implementar abas/seletor na página do colecionador para filtrar a grade entre "
 - [ ] Ao trocar de aba, a grade atualiza instantaneamente sem recarregar a página
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: High
 - Assignee: @developer
 

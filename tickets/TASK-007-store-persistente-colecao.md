@@ -11,7 +11,7 @@ Criar uma store Zustand com middleware `persist` para gerenciar o estado da cole
 - [ ] Store é tipada com TypeScript
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: High
 - Assignee: @developer
 
