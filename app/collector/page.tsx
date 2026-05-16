@@ -3,6 +3,7 @@ import { useState, useMemo, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import StickerGrid from '../components/collector/StickerGrid';
+import ProgressDashboard from '../components/collector/ProgressDashboard';
 import { useCollectorStore } from '@/lib/collectorStore';
 import { stickers } from '@/data/collector2026';
 import type { FilterMode } from '../components/collector/StickerGrid';
@@ -288,6 +289,8 @@ export default function CollectorPage() {
             </p>
           </>
         )}
+
+        {albumList.length > 0 && <ProgressDashboard />}
 
         {albumList.length > 0 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '2rem' }}>

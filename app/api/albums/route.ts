@@ -2,8 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAlbum, listAlbums } from '@/lib/albumBackend';
 
 export async function GET() {
-  const albums = listAlbums();
-  return NextResponse.json(albums);
+  try {
+    const albums = await listAlbums();
+    return NextResponse.json(albums);
+  } catch (error) {
+    console.error('listAlbums error:', error);
+    return NextResponse.json({ error: 'Failed to list albums' }, { status: 500 });
+  }
 }
 
 export async function POST(request: NextRequest) {
@@ -23,6 +28,11 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'owner is required and must be non-empty' }, { status: 400 });
   }
 
-  const album = createAlbum(name.trim(), owner.trim());
-  return NextResponse.json(album, { status: 201 });
+  try {
+    const album = await createAlbum(name.trim(), owner.trim());
+    return NextResponse.json(album, { status: 201 });
+  } catch (error) {
+    console.error('createAlbum error:', error);
+    return NextResponse.json({ error: 'Failed to create album' }, { status: 500 });
+  }
 }
