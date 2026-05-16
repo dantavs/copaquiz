@@ -11,7 +11,7 @@ Adicionar um card/banner no topo da página do colecionador com estatísticas do
 - [ ] Os números atualizam em tempo real conforme o usuário marca/desmarca figurinhas
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: Medium
 - Assignee: @developer
 

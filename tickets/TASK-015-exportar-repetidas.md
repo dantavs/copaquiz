@@ -11,7 +11,7 @@ Adicionar botão "Exportar Repetidas" na página do álbum que gera uma lista da
 - [ ] Feedback visual (toast) confirmando a cópia/download
 
 ## Status
-- Status: To Do
+- Status: Review
 - Priority: Medium
 - Assignee: @developer
 

@@ -1,9 +1,11 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import type { Sticker } from '@/data/collector2026';
 
 interface Props {
   groupName: string;
+  flagSvg?: string;
   stickers: Sticker[];
   owned: Record<string, number>;
   onIncrement: (id: string) => void;
@@ -71,7 +73,7 @@ const rarityCard: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function StickerGroup({ groupName, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress }: Props) {
+export default function StickerGroup({ groupName, flagSvg, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress }: Props) {
   const [expanded, setExpanded] = useState(initialExpanded);
 
   const collected = collectedInGroup;
@@ -102,8 +104,20 @@ export default function StickerGroup({ groupName, stickers, owned, onIncrement, 
         }}
         aria-expanded={expanded}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
-          <span style={{ fontWeight: 700, fontSize: '1rem' }}>{groupName}</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '1rem' }}>
+              {flagSvg && (
+                <Image
+                  src={`https://flagcdn.com/16x12/${flagSvg}.png`}
+                  width={16}
+                  height={12}
+                  alt={groupName}
+                  style={{ borderRadius: '2px', display: 'block' }}
+                  unoptimized
+                />
+              )}
+              {groupName}
+            </span>
           <span style={{
             display: 'flex',
             alignItems: 'center',

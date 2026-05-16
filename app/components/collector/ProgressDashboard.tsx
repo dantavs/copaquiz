@@ -83,7 +83,27 @@ const catPct: React.CSSProperties = {
   fontWeight: 800,
 };
 
-export default function ProgressDashboard() {
+const btnStyle: React.CSSProperties = {
+  flex: 1,
+  padding: '0.6rem 1rem',
+  borderRadius: '12px',
+  border: '1px solid var(--glass-border)',
+  background: 'rgba(255,255,255,0.05)',
+  color: '#fff',
+  fontWeight: 700,
+  fontSize: '0.85rem',
+  cursor: 'pointer',
+  transition: 'var(--transition)',
+  textAlign: 'center' as const,
+};
+
+export default function ProgressDashboard({
+  onExportMissing,
+  onExportRepeated,
+}: {
+  onExportMissing?: () => void;
+  onExportRepeated?: () => void;
+}) {
   const owned = useCollectorStore((s) => {
     const code = s.currentAlbumCode;
     return code && s.albums[code] ? s.albums[code].stickers : {};
@@ -141,7 +161,7 @@ export default function ProgressDashboard() {
       <div style={catGrid}>
         {(Object.keys(stats.catPcts) as Category[]).map((cat) => {
           const nameMap: Record<Category, string> = {
-            CLASSIC: 'Classic',
+            CLASSIC: 'Seleções',
             COCA_COLA: 'Coca-Cola',
             SPECIAL: 'Special',
           };
@@ -152,6 +172,15 @@ export default function ProgressDashboard() {
             </div>
           );
         })}
+      </div>
+
+      <div style={{ display: 'flex', gap: '0.75rem', marginTop: '1rem' }}>
+        <button style={btnStyle} onClick={onExportMissing}>
+          📋 Exportar Faltantes
+        </button>
+        <button style={btnStyle} onClick={onExportRepeated}>
+          🔄 Exportar Repetidas
+        </button>
       </div>
     </div>
   );

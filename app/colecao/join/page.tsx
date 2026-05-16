@@ -52,7 +52,7 @@ function JoinContent() {
     setAdding(true);
     try {
       await joinAlbum(album.code);
-      router.push('/collector');
+      router.push('/colecao');
     } catch {
       setError('Erro ao adicionar álbum. Tente novamente.');
     } finally {

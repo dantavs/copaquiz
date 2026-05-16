@@ -2,7 +2,7 @@
 import { useState, useMemo, useEffect } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import StickerGrid from '../components/collector/StickerGrid';
+import StickerGrid, { countryMap, getPrefix, countryFlag } from '../components/collector/StickerGrid';
 import ProgressDashboard from '../components/collector/ProgressDashboard';
 import { useCollectorStore } from '@/lib/collectorStore';
 import { stickers } from '@/data/collector2026';
@@ -96,7 +96,7 @@ const toastStyle: React.CSSProperties = {
 };
 
 export default function CollectorPage() {
-  const [filter, setFilter] = useState<FilterMode>('all');
+  const [filter, setFilter] = useState<FilterMode>('missing');
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showNewAlbum, setShowNewAlbum] = useState(false);
@@ -171,7 +171,7 @@ export default function CollectorPage() {
 
   const handleShare = async () => {
     if (!currentAlbumCode) return;
-    const link = `${window.location.origin}/collector/join?code=${currentAlbumCode}`;
+    const link = `${window.location.origin}/colecao/join?code=${currentAlbumCode}`;
     const albumName = albums[currentAlbumCode]?.name ?? 'Meu Álbum';
     
     if (navigator.share) {
@@ -191,6 +191,87 @@ export default function CollectorPage() {
         showToast('Link copiado! Compartilhe com seus amigos.');
       } catch {
         showToast('Erro ao copiar link.');
+      }
+    }
+  };
+
+  const handleExportRepeated = async () => {
+    const repeatedByPrefix = new Map<string, { id: string; qty: number }[]>();
+    for (const s of stickers) {
+      const qty = owned[s.id] ?? 0;
+      if (qty <= 1) continue;
+      const prefix = getPrefix(s.id);
+      const list = repeatedByPrefix.get(prefix) || [];
+      list.push({ id: s.id, qty });
+      repeatedByPrefix.set(prefix, list);
+    }
+    const total = stickers.filter((s) => (owned[s.id] ?? 0) > 1).length;
+    const lines: string[] = [
+      `🔄 Tenho ${total} figurinhas repetidas no álbum "${currentAlbumName}":`,
+      '',
+    ];
+    for (const [prefix, items] of repeatedByPrefix) {
+      const name = countryMap[prefix] ?? prefix;
+      const flag = countryFlag[prefix] ?? '';
+      lines.push(`${flag} ${name}: ${items.map((i) => `${i.id} (x${i.qty})`).join(', ')}`);
+    }
+    const text = lines.join('\n');
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${total} repetidas - ${currentAlbumName}`,
+          text: text,
+        });
+      } catch {
+        // User cancelled
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Lista de repetidas copiada!');
+      } catch {
+        showToast('Erro ao copiar lista.');
+      }
+    }
+  };
+
+  const handleExportMissing = async () => {
+    const missingByPrefix = new Map<string, string[]>();
+    for (const s of stickers) {
+      if ((owned[s.id] ?? 0) > 0) continue;
+      const prefix = getPrefix(s.id);
+      const list = missingByPrefix.get(prefix) || [];
+      list.push(s.id);
+      missingByPrefix.set(prefix, list);
+    }
+    const total = stickers.filter((s) => (owned[s.id] ?? 0) === 0).length;
+    const lines: string[] = [
+      `🏆 Faltam ${total} figurinhas no álbum "${currentAlbumName}":`,
+      '',
+    ];
+    for (const [prefix, ids] of missingByPrefix) {
+      const name = countryMap[prefix] ?? prefix;
+      const flag = countryFlag[prefix] ?? '';
+      lines.push(`${flag} ${name}: ${ids.join(', ')}`);
+    }
+    const text = lines.join('\n');
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `Faltam ${total} figurinhas - ${currentAlbumName}`,
+          text: text,
+        });
+      } catch {
+        // User cancelled
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(text);
+        showToast('Lista de faltantes copiada!');
+      } catch {
+        showToast('Erro ao copiar lista.');
       }
     }
   };
@@ -225,7 +306,7 @@ export default function CollectorPage() {
       <Header />
       <main className="container" style={{ minHeight: '70vh', padding: '2rem 1rem' }}>
         <h1 className="text-gradient" style={{ fontSize: '2.5rem', marginBottom: '0.5rem', textAlign: 'center' }}>
-          CopaCollector 2026
+          🏅 Coleção Figurinhas Copa do Mundo 2026
         </h1>
 
         {albumList.length > 0 && (
@@ -290,7 +371,12 @@ export default function CollectorPage() {
           </>
         )}
 
-        {albumList.length > 0 && <ProgressDashboard />}
+        {albumList.length > 0 && (
+          <ProgressDashboard
+            onExportMissing={handleExportMissing}
+            onExportRepeated={handleExportRepeated}
+          />
+        )}
 
         {albumList.length > 0 && (
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '2rem' }}>
