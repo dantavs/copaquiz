@@ -58,7 +58,7 @@ export function getPrefix(id: string): string {
   return match ? match[0] : id;
 }
 
-export default function StickerGrid({ filter }: { filter: FilterMode }) {
+export default function StickerGrid({ filter, teamPrefix }: { filter: FilterMode; teamPrefix?: string }) {
   const currentAlbumCode = useCollectorStore((s) => s.currentAlbumCode);
   const albums = useCollectorStore((s) => s.albums);
   const owned = currentAlbumCode && albums[currentAlbumCode]
@@ -89,16 +89,18 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
   }, []);
 
   const filteredGroups = useMemo(() => {
-    return fullGroups.map((group) => ({
-      ...group,
-      items: group.items.filter((s) => {
-        const q = owned[s.id] ?? 0;
-        if (filter === 'repeated') return q > 1;
-        if (filter === 'missing') return q === 0;
-        return true;
-      }),
-    }));
-  }, [filter, owned, fullGroups]);
+    return fullGroups
+      .filter((g) => !teamPrefix || g.prefix === teamPrefix)
+      .map((group) => ({
+        ...group,
+        items: group.items.filter((s) => {
+          const q = owned[s.id] ?? 0;
+          if (filter === 'repeated') return q > 1;
+          if (filter === 'missing') return q === 0;
+          return true;
+        }),
+      }));
+  }, [filter, owned, fullGroups, teamPrefix]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -107,6 +109,7 @@ export default function StickerGrid({ filter }: { filter: FilterMode }) {
           key={group.prefix}
           groupName={group.groupName}
           flagSvg={countryFlagSvg[group.prefix] ?? ''}
+          flagEmoji={countryFlag[group.prefix] ?? ''}
           stickers={group.items}
           owned={owned}
           onIncrement={increment}

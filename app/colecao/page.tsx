@@ -1,8 +1,9 @@
 'use client';
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import StickerGrid, { countryMap, getPrefix, countryFlag } from '../components/collector/StickerGrid';
+import StickerGrid, { countryMap, getPrefix, countryFlag, countryFlagSvg } from '../components/collector/StickerGrid';
 import ProgressDashboard from '../components/collector/ProgressDashboard';
 import { useCollectorStore } from '@/lib/collectorStore';
 import { stickers } from '@/data/collector2026';
@@ -97,6 +98,21 @@ const toastStyle: React.CSSProperties = {
 
 export default function CollectorPage() {
   const [filter, setFilter] = useState<FilterMode>('missing');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState<string | null>(null);
+  const searchRef = useRef<HTMLDivElement>(null);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
   const [loading, setLoading] = useState(true);
   const [showWelcome, setShowWelcome] = useState(false);
   const [showNewAlbum, setShowNewAlbum] = useState(false);
@@ -122,6 +138,24 @@ export default function CollectorPage() {
     ? albums[currentAlbumCode].stickers : {};
 
   const albumList = useMemo(() => Object.values(albums), [albums]);
+
+  // Team suggestions for search
+  const teamSuggestions = useMemo(() => {
+    const teams = Object.entries(countryMap).map(([prefix, name]) => ({
+      prefix, name, flag: countryFlag[prefix] ?? '', flagSvg: countryFlagSvg[prefix] ?? ''
+    }));
+    if (!searchTerm.trim()) return teams;
+    const term = searchTerm.toLowerCase();
+    return teams.filter(
+      (t) => t.name.toLowerCase().includes(term) || t.prefix.toLowerCase().includes(term)
+    );
+  }, [searchTerm]);
+
+  const handleSelectTeam = (prefix: string | null) => {
+    setSelectedTeam(prefix);
+    setSearchTerm(prefix ? countryMap[prefix] ?? prefix : '');
+    setShowSuggestions(false);
+  };
 
   // Poll server every 30s for updates from other users
   const pollAlbum = useCollectorStore((s) => s.pollAlbum);
@@ -389,7 +423,107 @@ export default function CollectorPage() {
           </div>
         )}
 
-        {albumList.length > 0 && <StickerGrid filter={filter} />}
+        {albumList.length > 0 && (
+          <div ref={searchRef} style={{ position: 'relative', maxWidth: '400px', margin: '0 auto 1.5rem' }}>
+            <input
+              type="text"
+              className="glass"
+              placeholder="Buscar seleção..."
+              value={searchTerm}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setShowSuggestions(true);
+                setSelectedTeam(null);
+              }}
+              onFocus={() => setShowSuggestions(true)}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: '12px',
+                border: '1px solid var(--glass-border)',
+                outline: 'none',
+                color: '#fff',
+                fontSize: '0.95rem',
+                background: 'transparent',
+              }}
+            />
+            {selectedTeam && searchTerm && (
+              <button
+                onClick={() => handleSelectTeam(null)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-muted)',
+                  cursor: 'pointer',
+                  fontSize: '1.2rem',
+                }}
+              >
+                ✕
+              </button>
+            )}
+            {showSuggestions && searchTerm !== undefined && (
+              <div
+                className="glass"
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: 0,
+                  right: 0,
+                  zIndex: 100,
+                  marginTop: '0.3rem',
+                  maxHeight: '250px',
+                  overflowY: 'auto',
+                  borderRadius: '12px',
+                  border: '1px solid var(--glass-border)',
+                }}
+              >
+                {teamSuggestions.map((t) => (
+                  <div
+                    key={t.prefix}
+                    onClick={() => handleSelectTeam(t.prefix)}
+                    style={{
+                      padding: '0.7rem 1rem',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.6rem',
+                      borderBottom: '1px solid rgba(255,255,255,0.05)',
+                      transition: 'background 0.2s',
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'rgba(255,255,255,0.08)')}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
+                  >
+                    {t.flagSvg ? (
+                      <Image
+                        src={`https://flagcdn.com/16x12/${t.flagSvg}.png`}
+                        width={16}
+                        height={12}
+                        alt={t.name}
+                        style={{ borderRadius: '2px', display: 'block' }}
+                        unoptimized
+                      />
+                    ) : (
+                      <span style={{ fontSize: '1rem' }}>{t.flag}</span>
+                    )}
+                    <span style={{ fontWeight: 600 }}>{t.name}</span>
+                    <span style={{ fontSize: '0.75rem', opacity: 0.5, marginLeft: 'auto' }}>{t.prefix}</span>
+                  </div>
+                ))}
+                {teamSuggestions.length === 0 && (
+                  <div style={{ padding: '1rem', textAlign: 'center', opacity: 0.5 }}>
+                    Nenhuma seleção encontrada
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {albumList.length > 0 && <StickerGrid filter={filter} teamPrefix={selectedTeam ?? undefined} />}
       </main>
       <Footer />
 

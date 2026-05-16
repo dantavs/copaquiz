@@ -11,7 +11,7 @@ Adicionar botão "Exportar Faltantes" na página do álbum que gera uma lista da
 - [ ] Feedback visual (toast) confirmando a cópia/download
 
 ## Status
-- Status: Review
+- Status: Done
 - Priority: Medium
 - Assignee: @developer
 

@@ -6,6 +6,7 @@ import type { Sticker } from '@/data/collector2026';
 interface Props {
   groupName: string;
   flagSvg?: string;
+  flagEmoji?: string;
   stickers: Sticker[];
   owned: Record<string, number>;
   onIncrement: (id: string) => void;
@@ -73,7 +74,7 @@ const rarityCard: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function StickerGroup({ groupName, flagSvg, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress }: Props) {
+export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress }: Props) {
   const [expanded, setExpanded] = useState(initialExpanded);
 
   const collected = collectedInGroup;
@@ -106,7 +107,7 @@ export default function StickerGroup({ groupName, flagSvg, stickers, owned, onIn
       >
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
             <span style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontWeight: 700, fontSize: '1rem' }}>
-              {flagSvg && (
+              {flagSvg ? (
                 <Image
                   src={`https://flagcdn.com/16x12/${flagSvg}.png`}
                   width={16}
@@ -115,7 +116,9 @@ export default function StickerGroup({ groupName, flagSvg, stickers, owned, onIn
                   style={{ borderRadius: '2px', display: 'block' }}
                   unoptimized
                 />
-              )}
+              ) : flagEmoji ? (
+                <span style={{ fontSize: '1.1rem' }}>{flagEmoji}</span>
+              ) : null}
               {groupName}
             </span>
           <span style={{
