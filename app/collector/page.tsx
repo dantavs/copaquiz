@@ -157,14 +157,30 @@ export default function CollectorPage() {
     setNewAlbumOwner('');
   };
 
-  const handleShare = () => {
+  const handleShare = async () => {
     if (!currentAlbumCode) return;
     const link = `${window.location.origin}/collector/join?code=${currentAlbumCode}`;
-    navigator.clipboard.writeText(link).then(() => {
-      showToast('Link copiado! Envie para seus amigos.');
-    }).catch(() => {
-      showToast('Erro ao copiar link.');
-    });
+    const albumName = albums[currentAlbumCode]?.name ?? 'Meu Álbum';
+    
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `CopaCollector: ${albumName}`,
+          text: `Me ajude a completar meu álbum de figurinhas "${albumName}" da Copa do Mundo 2026! 🏆`,
+          url: link,
+        });
+      } catch {
+        // User cancelled the share dialog
+      }
+    } else {
+      // Fallback: copy to clipboard
+      try {
+        await navigator.clipboard.writeText(link);
+        showToast('Link copiado! Compartilhe com seus amigos.');
+      } catch {
+        showToast('Erro ao copiar link.');
+      }
+    }
   };
 
   const handleRename = async () => {
