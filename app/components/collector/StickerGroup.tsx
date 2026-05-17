@@ -3,6 +3,8 @@ import { useState } from 'react';
 import Image from 'next/image';
 import type { Sticker } from '@/data/collector2026';
 
+export type FilterMode = 'all' | 'repeated' | 'missing';
+
 interface Props {
   groupName: string;
   flagSvg?: string;
@@ -16,6 +18,7 @@ interface Props {
   collectedInGroup: number;
   showProgress: boolean;
   showRepeatedCount?: boolean;
+  filterMode?: FilterMode;
 }
 
 const badgeStyle: React.CSSProperties = {
@@ -75,7 +78,7 @@ const rarityCard: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress, showRepeatedCount }: Props) {
+export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress, showRepeatedCount, filterMode }: Props) {
   const [expanded, setExpanded] = useState(initialExpanded);
 
   const collected = collectedInGroup;
@@ -180,14 +183,18 @@ export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, 
         }}>
           {stickers.map(sticker => {
             const quantity = owned[sticker.id] ?? 0;
+            const isMissingView = filterMode === 'missing';
             return (
               <div
                 key={sticker.id}
+                onClick={isMissingView ? () => onIncrement(sticker.id) : undefined}
                 style={{
                   position: 'relative',
                   padding: '1rem 0.5rem',
                   borderRadius: 'var(--border-radius)',
                   textAlign: 'center',
+                  cursor: isMissingView ? 'pointer' : 'default',
+                  transition: 'var(--transition)',
                   ...rarityCard[sticker.rarity],
                 }}
               >
@@ -202,22 +209,24 @@ export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, 
                 <div style={{ fontSize: '0.7rem', opacity: 0.7, marginBottom: '0.5rem' }}>
                   {sticker.name}
                 </div>
-                <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem' }}>
-                  <button
-                    style={btnStyle}
-                    onClick={() => onDecrement(sticker.id)}
-                    aria-label={`Remover ${sticker.id}`}
-                  >
-                    &minus;
-                  </button>
-                  <button
-                    style={{ ...btnStyle, background: 'var(--primary)', color: '#000', border: 'none' }}
-                    onClick={() => onIncrement(sticker.id)}
-                    aria-label={`Adicionar ${sticker.id}`}
-                  >
-                    +
-                  </button>
-                </div>
+                {!isMissingView && (
+                  <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem' }}>
+                    <button
+                      style={btnStyle}
+                      onClick={(e) => { e.stopPropagation(); onDecrement(sticker.id); }}
+                      aria-label={`Remover ${sticker.id}`}
+                    >
+                      &minus;
+                    </button>
+                    <button
+                      style={{ ...btnStyle, background: 'var(--primary)', color: '#000', border: 'none' }}
+                      onClick={(e) => { e.stopPropagation(); onIncrement(sticker.id); }}
+                      aria-label={`Adicionar ${sticker.id}`}
+                    >
+                      +
+                    </button>
+                  </div>
+                )}
               </div>
             );
           })}

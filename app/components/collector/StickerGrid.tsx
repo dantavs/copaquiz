@@ -2,9 +2,9 @@
 import { useMemo } from 'react';
 import { useCollectorStore } from '@/lib/collectorStore';
 import { stickers } from '@/data/collector2026';
-import StickerGroup from './StickerGroup';
+import StickerGroup, { type FilterMode } from './StickerGroup';
 
-export type FilterMode = 'all' | 'repeated' | 'missing';
+export type { FilterMode };
 
 export const countryMap: Record<string, string> = {
   MEX: 'México', RSA: 'África do Sul', KOR: 'Coreia do Sul', CZE: 'República Tcheca',
@@ -118,6 +118,7 @@ export default function StickerGrid({ filter, teamPrefix }: { filter: FilterMode
           collectedInGroup={fullGroups.find((g) => g.prefix === group.prefix)?.items.filter((s) => (owned[s.id] ?? 0) > 0).length ?? 0}
           showProgress={filter !== 'repeated'}
           showRepeatedCount={filter === 'repeated'}
+          filterMode={filter}
         />
       ))}
     </div>
