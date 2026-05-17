@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import type { Sticker } from '@/data/collector2026';
 
@@ -25,17 +25,17 @@ const badgeStyle: React.CSSProperties = {
   position: 'absolute',
   top: '4px',
   right: '4px',
-  background: 'var(--primary)',
-  color: '#000',
+  background: 'transparent',
+  color: 'var(--primary)',
   fontWeight: 800,
-  fontSize: '0.7rem',
-  minWidth: '20px',
-  height: '20px',
+  fontSize: '0.75rem',
+  minWidth: '22px',
+  height: '22px',
   borderRadius: '999px',
+  border: '2px solid var(--primary)',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  boxShadow: '0 2px 8px rgba(0,0,0,0.3)',
   zIndex: 2,
 };
 
@@ -78,8 +78,9 @@ const rarityCard: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress, showRepeatedCount, filterMode }: Props) {
+export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = false, totalInGroup, collectedInGroup, showProgress, showRepeatedCount, filterMode }: Props) {
   const [expanded, setExpanded] = useState(initialExpanded);
+  const [flashId, setFlashId] = useState<string | null>(null);
 
   const collected = collectedInGroup;
   const total = totalInGroup;
@@ -88,6 +89,11 @@ export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, 
     return sum + Math.max(0, qty - 1);
   }, 0);
   const displayCount = showRepeatedCount ? repeatedCount : collected;
+
+  const triggerFlash = useCallback((id: string) => {
+    setFlashId(id);
+    setTimeout(() => setFlashId(null), 300);
+  }, []);
 
   return (
     <div style={{
@@ -194,13 +200,17 @@ export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, 
                   borderRadius: 'var(--border-radius)',
                   textAlign: 'center',
                   cursor: isMissingView ? 'pointer' : 'default',
-                  transition: 'var(--transition)',
+                  transition: 'box-shadow 0.2s ease, transform 0.2s ease',
                   ...rarityCard[sticker.rarity],
+                  ...(flashId === sticker.id ? {
+                    boxShadow: '0 0 25px rgba(0,223,94,0.6), inset 0 0 15px rgba(0,223,94,0.15)',
+                    transform: 'scale(1.03)',
+                  } : {}),
                 }}
               >
                 {quantity > 0 && (
                   <div style={badgeStyle}>
-                    {quantity}
+                    {showRepeatedCount ? quantity - 1 : quantity}
                   </div>
                 )}
                 <div style={{ fontWeight: 700, fontSize: '0.8rem', marginBottom: '0.5rem' }}>
@@ -213,14 +223,14 @@ export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, 
                   <div style={{ display: 'flex', justifyContent: 'center', gap: '0.4rem' }}>
                     <button
                       style={btnStyle}
-                      onClick={(e) => { e.stopPropagation(); onDecrement(sticker.id); }}
+                      onClick={(e) => { e.stopPropagation(); triggerFlash(sticker.id); onDecrement(sticker.id); }}
                       aria-label={`Remover ${sticker.id}`}
                     >
                       &minus;
                     </button>
                     <button
                       style={{ ...btnStyle, background: 'var(--primary)', color: '#000', border: 'none' }}
-                      onClick={(e) => { e.stopPropagation(); onIncrement(sticker.id); }}
+                      onClick={(e) => { e.stopPropagation(); triggerFlash(sticker.id); onIncrement(sticker.id); }}
                       aria-label={`Adicionar ${sticker.id}`}
                     >
                       +

@@ -125,7 +125,7 @@ export default function ProgressDashboard({
         collected++;
         catOwned[s.category]++;
       }
-      if (qty > 1) repeated++;
+      if (qty > 1) repeated += (qty - 1);
       if (qty === 0) missing++;
     }
 

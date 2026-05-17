@@ -179,7 +179,10 @@ export default function CollectorPage() {
 
   const counts = useMemo(() => {
     const total = stickers.length;
-    const repeated = stickers.filter((s) => (owned[s.id] ?? 0) > 1).length;
+    const repeated = stickers.reduce((sum, s) => {
+      const qty = owned[s.id] ?? 0;
+      return sum + Math.max(0, qty - 1);
+    }, 0);
     const missing = stickers.filter((s) => (owned[s.id] ?? 0) === 0).length;
     return { all: total, repeated, missing };
   }, [owned]);
@@ -239,7 +242,10 @@ export default function CollectorPage() {
       list.push({ id: s.id, qty });
       repeatedByPrefix.set(prefix, list);
     }
-    const total = stickers.filter((s) => (owned[s.id] ?? 0) > 1).length;
+    const total = stickers.reduce((sum, s) => {
+      const qty = owned[s.id] ?? 0;
+      return sum + Math.max(0, qty - 1);
+    }, 0);
     const lines: string[] = [
       `🔄 Tenho ${total} figurinhas repetidas no álbum "${currentAlbumName}":`,
       '',
@@ -247,7 +253,7 @@ export default function CollectorPage() {
     for (const [prefix, items] of repeatedByPrefix) {
       const name = countryMap[prefix] ?? prefix;
       const flag = countryFlag[prefix] ?? '';
-      lines.push(`${flag} ${name}: ${items.map((i) => `${i.id} (x${i.qty})`).join(', ')}`);
+      lines.push(`${flag} ${name}: ${items.map((i) => `${i.id} (x${i.qty - 1})`).join(', ')}`);
     }
     const text = lines.join('\n');
 
