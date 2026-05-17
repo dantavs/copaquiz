@@ -413,7 +413,7 @@ export default function CollectorPage() {
         )}
 
         {albumList.length > 0 && (
-          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '2rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'center', gap: '0.6rem', marginBottom: '2rem', flexWrap: 'wrap' }}>
             {filters.map((f) => (
               <button key={f.key} style={tabStyle(filter === f.key)} onClick={() => setFilter(f.key)}>
                 {f.label}

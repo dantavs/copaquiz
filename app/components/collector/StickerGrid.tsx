@@ -117,6 +117,7 @@ export default function StickerGrid({ filter, teamPrefix }: { filter: FilterMode
           totalInGroup={fullGroups.find((g) => g.prefix === group.prefix)?.items.length ?? 0}
           collectedInGroup={fullGroups.find((g) => g.prefix === group.prefix)?.items.filter((s) => (owned[s.id] ?? 0) > 0).length ?? 0}
           showProgress={filter !== 'repeated'}
+          showRepeatedCount={filter === 'repeated'}
         />
       ))}
     </div>

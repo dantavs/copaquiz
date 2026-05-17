@@ -163,7 +163,7 @@ export default function ProgressDashboard({
           const nameMap: Record<Category, string> = {
             CLASSIC: 'Seleções',
             COCA_COLA: 'Coca-Cola',
-            SPECIAL: 'Special',
+            SPECIAL: 'Especial',
           };
           return (
             <div key={cat} style={catBadge(cat)}>

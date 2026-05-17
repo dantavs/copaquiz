@@ -15,6 +15,7 @@ interface Props {
   totalInGroup: number;
   collectedInGroup: number;
   showProgress: boolean;
+  showRepeatedCount?: boolean;
 }
 
 const badgeStyle: React.CSSProperties = {
@@ -74,11 +75,16 @@ const rarityCard: Record<string, React.CSSProperties> = {
   },
 };
 
-export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress }: Props) {
+export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, owned, onIncrement, onDecrement, initialExpanded = true, totalInGroup, collectedInGroup, showProgress, showRepeatedCount }: Props) {
   const [expanded, setExpanded] = useState(initialExpanded);
 
   const collected = collectedInGroup;
   const total = totalInGroup;
+  const repeatedCount = stickers.reduce((sum, s) => {
+    const qty = owned[s.id] ?? 0;
+    return sum + Math.max(0, qty - 1);
+  }, 0);
+  const displayCount = showRepeatedCount ? repeatedCount : collected;
 
   return (
     <div style={{
@@ -129,7 +135,7 @@ export default function StickerGroup({ groupName, flagSvg, flagEmoji, stickers, 
             fontWeight: 600,
             opacity: 0.85,
           }}>
-            <span>{collected}/{total}</span>
+            <span>{showRepeatedCount ? `${displayCount} repetidas` : `${collected}/${total}`}</span>
             <span style={{
               transition: 'transform 0.3s ease',
               transform: expanded ? 'rotate(180deg)' : 'rotate(0deg)',
