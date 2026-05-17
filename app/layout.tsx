@@ -32,9 +32,9 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/copaquiz_logo_verdeNeon_h.png', type: 'image/png' },
+      { url: '/images/favicon.png', type: 'image/png' },
     ],
-    apple: '/copaquiz_logo_verdeNeon_h.png',
+    apple: '/images/favicon.png',
   }
 };
 
